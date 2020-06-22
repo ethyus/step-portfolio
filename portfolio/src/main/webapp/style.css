@@ -1,9 +1,74 @@
-#content {
-  margin-left: auto;
-  margin-right: auto;
-  width: 650px;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+
+body{
+    margin:0px;
 }
 
-#greeting-container {
-  margin-top: 20px;
+/* Navigation Bar Styling */
+
+.nav-container{
+    background-color: #201b1b;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: 80px;
 }
+
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 10%;
+    height:40px;
+}
+
+li, a {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #edf0f1;
+    text-decoration: none;
+}
+
+.logo-links {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.logo-links li {
+    margin: 5px;
+}
+
+.logo-links li a {
+    transition: all 0.3s ease 0s;
+}
+
+.logo-links li a:hover {
+    color: #0088a9
+}
+
+.web-links {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.web-links li {
+    margin: 5px;
+}
+
+.web-links li a {
+    transition: all 0.3s ease 0s;
+}
+
+.web-links li a:hover {
+    color: #0088a9
+}
+
+/* Content */
