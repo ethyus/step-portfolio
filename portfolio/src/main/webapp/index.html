@@ -1,89 +1,120 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <meta name = "viewport" content = "width = device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width = device-width, initial-scale=1.0" />
     <title>My Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
   </head>
   <body>
-    <div class = "global-container">
-        <div class = "nav-container">
-                <nav>
-                    <ul class = "logo-links">
-                        <li><a href= "https://www.linkedin.com/in/thomas-ngo-b983bb149/"> 
-                            <i class="fab fa-linkedin-in"></i>
-                            </a></li>
-                        <li><a href= "https://github.com/ethyus">
-                            <i class="fab fa-github"></i>
-                            </a></li>
-                        <li><a href= "https://github.com/ethyus">
-                            <i class="far fa-envelope"></i>
-                            </a></li>
-                            
-                    </ul>
-                </nav>
+    <div class="global-container">
+      <div class="nav-container">
+        <nav>
+          <ul class="logo-links">
+            <li>
+              <a href="https://www.linkedin.com/in/thomas-ngo-b983bb149/">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/ethyus">
+                <i class="fab fa-github"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/ethyus">
+                <i class="far fa-envelope"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
 
-                <nav>
-                    <ul class = "web-links">
-                        <li> <a href = "#"> About Me </a> </li>
-                        <li> <a href = "#"> About Me </a> </li>
-                        <li> <a href = "#"> About Me </a> </li>
-                    </ul>
-                </nav>
-            </div>
+        <nav>
+          <ul class="web-links">
+            <li><a href="#"> About Me </a></li>
+            <li><a href="#"> About Me </a></li>
+            <li><a href="#"> About Me </a></li>
+          </ul>
+        </nav>
+      </div>
 
-        
-        <div class = "main-container">
-            <div class = "section-0">
-                <div class = "type-writer-container">
-                    <h1> Thomas Ngo
-                        <span
-                            class = "txt-words"
-                            data-period = "2000"
-                            data-words = '["Thomas.", "— a student at MIT.", "— a matcha addict."
-                            , "— also a coffee addict.", "— a San Jose native."]'></span>
-                    </h1>
-                    <h2> Welcome to My Website </h2>        
-                </div>
-            </div>
-            <div class = "section-1">
-                <div class= "image-wrapper" style="background-image:url(images/food.jpg)"></div>
-                <div class = "image-wrapper" style="background-image:url(images/coding.png)"></div>
-            </div>
-
-            <div class = "section-2">2
-
-            </div>
-
-            <div class = "section-3">3
-
-            </div>
-
-            <div class = "section-4">4
-
-            </div>
-
-            <div class = "section-5">5
-
-            </div>
-            
+      <div class="main-container">
+        <div class="section-0">
+          <div class="type-writer-container">
+            <h1>
+              Thomas Ngo
+              <span
+                class="txt-words"
+                data-period="2000"
+                data-words='["— a student at Massachusetts Institute of Technology.", "— a matcha addict."
+                            , "— also a coffee addict.", "— a San Jose native."]'
+              ></span>
+            </h1>
+            <h2>Welcome! Check out what I've been up to.</h2>
+          </div>
         </div>
+        <div class="section-1">
+          <div
+            class="image-wrapper"
+            style="background-image: url(images/food.jpg);"
+          ></div>
+          <div
+            class="image-wrapper"
+            style="background-image: url(images/coding.png);"
+          ></div>
+          <div
+            class="image-wrapper"
+            style="background-image: url(images/gym.jpg);"
+          ></div>
+          <div
+            class="image-wrapper"
+            style="background-image: url(images/barista.jpg);"
+          ></div>
+          <div
+            class="image-wrapper"
+            style="background-image: url(images/running.jpg);"
+          ></div>
+          <div
+            class="image-wrapper"
+            style="background-image: url(images/matcha.png);"
+          ></div>
+          <div
+            class="image-wrapper"
+            style="background-image: url(images/hiking.jpg);"
+          ></div>
+          <div
+            class="image-wrapper"
+            style="background-image: url(images/swimming.jpg);"
+          ></div>
+          <div
+            class="image-wrapper"
+            style="background-image: url(images/tv.png);"
+          ></div>
         </div>
 
-        <div id= "particles-js">
-        </div>
+        <div class="section-2">2</div>
 
-        <script src="https://kit.fontawesome.com/089ef5eb85.js" crossorigin="anonymous"></script>
-        <script src = "https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-        <script>
-            particlesJS.load('particles-js',
-            'particles.json', function(){
-                console.log('particles.json loaded')
-            })
-        </script>
-        <script src="typing.js"></script>
-        
+        <div class="section-3">3</div>
+
+        <div class="section-4">4</div>
+
+        <div class="section-5">5</div>
+      </div>
+    </div>
+
+    <div id="particles-js"></div>
+
+    <script
+      src="https://kit.fontawesome.com/089ef5eb85.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+      particlesJS.load("particles-js", "particles.json", function () {
+        console.log("particles.json loaded");
+      });
+    </script>
+    <script src="typing.js"></script>
   </body>
 </html>
