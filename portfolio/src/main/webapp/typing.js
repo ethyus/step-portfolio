@@ -11,31 +11,28 @@ class TyperWriter {
     this.isDelete = false;
   }
 }
-//typing main function
+// typing main function
 TyperWriter.prototype.typeFunc = function () {
   console.log(this.words.length);
-  const current_index = this.wordIndex % this.words.length;
-  const full_word = this.words[current_index];
+  const currentIndex = this.wordIndex % this.words.length;
+  const fullWord = this.words[currentIndex];
 
   if (this.isDelete) {
-    //Remove character
-    this.txt = full_word.substring(0, this.txt.length - 1);
+    // Remove character
+    this.txt = fullWord.substring(0, this.txt.length - 1);
   } else {
-    //Add character
-    this.txt = full_word.substring(0, this.txt.length + 1);
+    // Add character
+    this.txt = fullWord.substring(0, this.txt.length + 1);
   }
 
-  //Output on website
-  this.elements.innerHTML = '<span class = "text">' + this.txt + "</span>";
-  let typeSpeed = 100;
-  if (this.isDelete) {
-    typeSpeed /= 2;
-  }
-  //Change type speed when deleting
-  if (!this.isDelete && this.txt == full_word) {
+  // Output on website
+  this.elements.textContent = this.txt;
+  let typeSpeed = this.isDelete ? 50 : 100;
+  // Change type speed when deleting
+  if (!this.isDelete && this.txt === fullWord) {
     typeSpeed = this.waitTime;
     this.isDelete = true;
-  } else if (this.isDelete && this.txt == "") {
+  } else if (this.isDelete && this.txt === "") {
     this.isDelete = false;
     this.wordIndex += 1;
     typeSpeed = 500;
@@ -44,15 +41,16 @@ TyperWriter.prototype.typeFunc = function () {
   setTimeout(() => this.typeFunc(), typeSpeed);
 };
 
-//initialize object
 document.addEventListener("DOMContentLoaded", init);
 
 function init() {
-  const elements = document.querySelector(".txt-words");
-  const words = JSON.parse(elements.getAttribute("data-words"));
-  console.log(words);
+  const elements = document.getElementById("text");
+  const words = [
+    "— a student at Massachusetts Institute of Technology.",
+    "— a matcha addict.",
+    "— also a coffee addict.",
+    "— a San Jose native.",
+  ];
   const waitTime = elements.getAttribute("data-period");
   new TyperWriter(elements, words, waitTime);
 }
-
-

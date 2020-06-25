@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@200;400&display=swap");
-
+* {
+  box-sizing: border-box;
+}
 body {
   margin: 0px;
   font-size: 16px;
@@ -78,9 +80,10 @@ li a i {
 
 /* Content */
 
-.main-container {
+.main-page {
   display: grid;
   grid-template-columns: 1fr;
+  grid-template-rows: auto;
 }
 .section-0 {
   height: 350px;
@@ -110,12 +113,15 @@ h2 {
 .txt-words > .text {
   border-right: 0.2rem solid #777;
 }
-
 .section-1 {
+  height: 1300px;
+}
+.image-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 5%;
   padding: 50px;
+  height: 100%;
 }
 .image-wrapper {
   height: 300px;
@@ -127,19 +133,11 @@ h2 {
 }
 
 .section-2 {
-  height: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  height: 100px;
 }
 
 .section-3 {
   height: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 .section-4 {
@@ -163,6 +161,13 @@ h2 {
   .nav-container {
     padding: 5px 20px;
   }
+  .section-1 {
+    height: 2000px;
+  }
+
+  .image-container {
+    grid-template-columns: 1fr 1fr;
+  }
   li a {
     font-size: 0.8rem;
   }
@@ -183,6 +188,16 @@ h2 {
 @media (max-width: 550px) {
   .nav-container {
     padding: 5px 20px;
+  }
+  .section-1 {
+    height: 2250px;
+  }
+  .image-container {
+    grid-template-columns: 1fr;
+    grid-gap: 1%;
+  }
+  .image-wrapper {
+    height: 200px;
   }
   li a {
     font-size: 0.6rem;
