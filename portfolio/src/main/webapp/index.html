@@ -8,7 +8,7 @@
     <script src="script.js"></script>
   </head>
   <body>
-    <div class="global-container">
+    <div class="global-container" id="home">
       <div class="nav-container">
         <nav>
           <ul class="logo-links">
@@ -23,7 +23,7 @@
               </a>
             </li>
             <li>
-              <a href="https://github.com/ethyus">
+              <a href="#Contact-page">
                 <i class="far fa-envelope"></i>
               </a>
             </li>
@@ -32,9 +32,9 @@
 
         <nav>
           <ul class="web-links">
-            <li><a href="#"> About Me </a></li>
-            <li><a href="#"> About Me </a></li>
-            <li><a href="#"> About Me </a></li>
+            <li><a href="#home"> Home </a></li>
+            <li><a href="#about"> About Me </a></li>
+            <li><a href="#resume"> Resume </a></li>
           </ul>
         </nav>
       </div>
@@ -48,7 +48,7 @@
                 ><span id="text"></span>
               </span>
             </h1>
-            <h2>Welcome! Check out what I've been up to.</h2>
+            <h2>Welcome! This is what I've been up to.</h2>
           </div>
         </div>
         <div class="section-1">
@@ -92,13 +92,73 @@
           </div>
         </div>
 
-        <div class="section-2">2</div>
+        <div class="section-2" id="about">
+          <div class="info">
+            <div class "sub-header">
+            <span class="span-me">About me</span>
+          </div>
 
-        <div class="section-3">3</div>
+          <div class="aboutMe-content">
+            <h2>
+              Hey, I'm Thomas Ngo, a rising sophomore at Massachusetts Institute
+              of Technology, pursuing a joint-major in computer science and neuroscience. I am currently interested in machine learning and
+              its applications; I hope to tackle on some ML projects in the future. Outside of academia, I enjoy excercising and
+              making espresso and matcha drinks. 
+            </h2>
+          </div>
+        </div>
+      </div>
+      <div class="section-3" id="resume">
+        <div class="info">
+          <div class="sub-header">
+            <span class="span-me">Education & Experience</span>
+          </div>
 
-        <div class="section-4">4</div>
-
-        <div class="section-5">5</div>
+          <div class="resume-content">
+            <ul class="resume-list">
+              <li>
+                <b>Massachusetts Institute of Technology</b>
+                <i>Current</i>
+                <i class="fas fa-book"></i>
+                <p>
+                  Pursuing a Bachelor of Science's in Engineering in Computer
+                  Science and Neuroscience (Course 6-9p).
+                </p>
+              </li>
+              <li>
+                <b>Yerba Buena High School</b>
+                <i>2015 - 2019</i>
+                <i class="fas fa-book"></i>
+                <p>Hung out with friends and swam on varsity team</p>
+              </li>
+              <li>
+                <b>Google Step Intern</b>
+                <i>Current</i>
+                <i class="fas fa-briefcase"></i>
+                <p>
+                  Learning a lot and having fun.
+                </p>
+              </li>
+              <li>
+                <b>Stanford Geophysics Intern</b>
+                <i>2018 - 2019</i>
+                <i class="fas fa-briefcase"></i>
+                <p>
+                  Analyzed Global Positioning System data of Mount St. Helens
+                  and extracted observed volcano deformation signal for
+                  comparison of a physics-based model.
+                </p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="section-4" id="Contact-page">
+        <div class="info">
+          <div class="sub-header">
+            <span class="span-me">Contact Me</span>
+          </div>
+        </div>
       </div>
     </div>
 
