@@ -1,53 +1,179 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
-    <meta name = "viewport" content = "width = device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width = device-width, initial-scale=1.0" />
     <title>My Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
   </head>
   <body>
- 
-    <div class = "nav-container">
-            <div class = "nav-bar">
-                <nav>
-                    <ul class = "logo-links">
-                        <li style = "font-size: 30px";> THOMAS. </li>
-                        <li><a href= "https://www.linkedin.com/in/thomas-ngo-b983bb149/"> 
-                            <i class="fab fa-linkedin-in" style = "font-size: 42px";></i>
-                            </a></li>
-                        <li><a href= "https://github.com/ethyus">
-                            <i class="fab fa-github" style = "font-size: 42px";></i>
-                            </a></li>
-                    </ul>
-                </nav>
+    <div class="global-container" id="home">
+      <div class="nav-container">
+        <nav>
+          <ul class="logo-links">
+            <li>
+              <a href="https://www.linkedin.com/in/thomas-ngo-b983bb149/">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/ethyus">
+                <i class="fab fa-github"></i>
+              </a>
+            </li>
+            <li>
+              <a href="#Contact-page">
+                <i class="far fa-envelope"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
 
-                <nav>
-                    <ul class = "web-links">
-                        <li> <a href = "#"> About Me </a> </li>
-                        <li> <a href = "#"> About Me </a> </li>
-                        <li> <a href = "#"> About Me </a> </li>
-                    </ul>
-                </nav>
+        <nav>
+          <ul class="web-links">
+            <li><a href="#home"> Home </a></li>
+            <li><a href="#about"> About Me </a></li>
+            <li><a href="#resume"> Resume </a></li>
+          </ul>
+        </nav>
+      </div>
 
-            </div>
+      <div class="main-page">
+        <div class="section-0">
+          <div class="type-writer-container">
+            <h1>
+              Thomas Ngo
+              <span class="txt-words" data-period="2000"
+                ><span id="text"></span>
+              </span>
+            </h1>
+            <h2>Welcome! This is what I've been up to.</h2>
+          </div>
+        </div>
+        <div class="section-1">
+          <div class="image-container">
+            <img
+              class="image-wrapper"
+              style="background-image: url(images/food.jpg);"
+            />
+            <img
+              class="image-wrapper"
+              style="background-image: url(images/coding.png);"
+            />
+            <img
+              class="image-wrapper"
+              style="background-image: url(images/gym.jpg);"
+            />
+            <img
+              class="image-wrapper"
+              style="background-image: url(images/barista.jpg);"
+            />
+            <img
+              class="image-wrapper"
+              style="background-image: url(images/running.jpg);"
+            />
+            <img
+              class="image-wrapper"
+              style="background-image: url(images/matcha.png);"
+            />
+            <img
+              class="image-wrapper"
+              style="background-image: url(images/hiking.jpg);"
+            />
+            <img
+              class="image-wrapper"
+              style="background-image: url(images/swimming.jpg);"
+            />
+            <img
+              class="image-wrapper"
+              style="background-image: url(images/tv.png);"
+            />
+          </div>
         </div>
 
-        <div id= "particles-js">
-            <div class = "content_container">
-                
-            </div>
-        </div>
+        <div class="section-2" id="about">
+          <div class="info">
+            <div class "sub-header">
+            <span class="span-me">About me</span>
+          </div>
 
-        <script src="https://kit.fontawesome.com/089ef5eb85.js" crossorigin="anonymous"></script>
-        <script src = "https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-        <script>
-            particlesJS.load('particles-js',
-            'particles.json', function(){
-                console.log('particles.json loaded')
-            })
-        </script>
-        
+          <div class="aboutMe-content">
+            <h2>
+              Hey, I'm Thomas Ngo, a rising sophomore at Massachusetts Institute
+              of Technology, pursuing a joint-major in computer science and neuroscience. I am currently interested in machine learning and
+              its applications; I hope to tackle on some ML projects in the future. Outside of academia, I enjoy excercising and
+              making espresso and matcha drinks. 
+            </h2>
+          </div>
+        </div>
+      </div>
+      <div class="section-3" id="resume">
+        <div class="info">
+          <div class="sub-header">
+            <span class="span-me">Education & Experience</span>
+          </div>
+
+          <div class="resume-content">
+            <ul class="resume-list">
+              <li>
+                <b>Massachusetts Institute of Technology</b>
+                <i>Current</i>
+                <i class="fas fa-book"></i>
+                <p>
+                  Pursuing a Bachelor of Science's in Engineering in Computer
+                  Science and Neuroscience (Course 6-9p).
+                </p>
+              </li>
+              <li>
+                <b>Yerba Buena High School</b>
+                <i>2015 - 2019</i>
+                <i class="fas fa-book"></i>
+                <p>Hung out with friends and swam on varsity team</p>
+              </li>
+              <li>
+                <b>Google Step Intern</b>
+                <i>Current</i>
+                <i class="fas fa-briefcase"></i>
+                <p>
+                  Learning a lot and having fun.
+                </p>
+              </li>
+              <li>
+                <b>Stanford Geophysics Intern</b>
+                <i>2018 - 2019</i>
+                <i class="fas fa-briefcase"></i>
+                <p>
+                  Analyzed Global Positioning System data of Mount St. Helens
+                  and extracted observed volcano deformation signal for
+                  comparison of a physics-based model.
+                </p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="section-4" id="Contact-page">
+        <div class="info">
+          <div class="sub-header">
+            <span class="span-me">Contact Me</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="particles-js"></div>
+
+    <script
+      src="https://kit.fontawesome.com/089ef5eb85.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+      particlesJS.load("particles-js", "particles.json", function () {
+        console.log("particles.json loaded");
+      });
+    </script>
+    <script src="typing.js"></script>
   </body>
 </html>
