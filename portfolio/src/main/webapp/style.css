@@ -138,46 +138,46 @@ h2 {
 .section-2 {
   height: 800px;
   position: relative;
-  background-color:#aed9d9;
+  background-color: #aed9d9;
 }
 
 .info {
-    position:absolute;
-    padding: 100px;
+  position: absolute;
+  padding: 100px;
 }
 
-.sub-header{
-    padding: 0px 25px;
+.sub-header {
+  padding: 0px 25px;
 }
 
-.span-me{
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    padding: 7px 18px;
-    color: black;
-    border: 1px solid black;
+.span-me {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 7px 18px;
+  color: black;
+  border: 1px solid black;
 }
 /* Resume */
 .section-3 {
   height: 600px;
-  position:relative;
+  position: relative;
   background-color: white;
 }
 
-.resume-list{
-    padding: 20px 0 0 0;
+.resume-list {
+  padding: 20px 0 0 0;
 }
 
-.resume-list li{
-    color:black;
-    font-size: 18px;
-    text-transform: none;
+.resume-list li {
+  color: black;
+  font-size: 18px;
+  text-transform: none;
 }
 
-.resume-list li i{
-    padding: 0 2px;
+.resume-list li i {
+  padding: 0 2px;
 }
 
 .section-4 {
