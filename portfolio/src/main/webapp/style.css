@@ -136,7 +136,7 @@ h2 {
 
 /* About me */
 .section-2 {
-  height: 800px;
+  height: 700px;
   position: relative;
   background-color: #aed9d9;
 }
@@ -161,7 +161,7 @@ h2 {
 }
 /* Resume */
 .section-3 {
-  height: 600px;
+  height: 700px;
   position: relative;
   background-color: white;
 }
@@ -178,7 +178,9 @@ h2 {
 
 .resume-list li i {
   padding: 0 2px;
+  font-size: 24px
 }
+
 
 .section-4 {
   height: 500px;
@@ -218,7 +220,13 @@ h2 {
     font-size: 2.5rem;
   }
   h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
+  }
+  .section-2, .section-3{
+      height: 650px;
+  }
+  .info{
+      padding:50px;
   }
 }
 
@@ -242,6 +250,16 @@ h2 {
   li a i {
     font-size: 2rem;
   }
+  .span-me{
+      padding:5px 10px;
+      font-size:12px;
+  }
+  .resume-list li{
+      font-size:18px
+  }
+  .info{
+      padding: 30px;
+  }
 }
 
 @media (max-width: 400px) {
@@ -259,6 +277,13 @@ h2 {
   }
   h2 {
     font-size: 1.5rem;
+  }
+    .span-me{
+      padding:5px 10px;
+      font-size:8px;
+  }
+    .resume-list li{
+      font-size:16px
   }
 }
 
