@@ -13,7 +13,6 @@ class TyperWriter {
 }
 // typing main function
 TyperWriter.prototype.typeFunc = function () {
-  console.log(this.words.length);
   const currentIndex = this.wordIndex % this.words.length;
   const fullWord = this.words[currentIndex];
 
