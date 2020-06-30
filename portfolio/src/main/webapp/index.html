@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
   </head>
-  <body>
-    <div class="global-container" id="home">
+  <body onload = "getComment()">
+    <div class="global-container" id="home" >
       <div class="nav-container">
         <nav>
           <ul class="logo-links">
@@ -101,9 +101,11 @@
           <div class="aboutMe-content">
             <h2>
               Hey, I'm Thomas Ngo, a rising sophomore at Massachusetts Institute
-              of Technology, pursuing a joint-major in computer science and neuroscience. I am currently interested in machine learning and
-              its applications; I hope to tackle on some ML projects in the future. Outside of academia, I enjoy excercising and
-              making espresso and matcha drinks. 
+              of Technology, pursuing a joint-major in computer science and
+              neuroscience. I am currently interested in machine learning and
+              its applications; I hope to tackle on some ML projects in the
+              future. Outside of academia, I enjoy excercising and making
+              espresso and matcha drinks.
             </h2>
           </div>
         </div>
@@ -153,12 +155,30 @@
           </div>
         </div>
       </div>
-      <div class="section-4" id="Contact-page">
+      <div class="section-4" id="comment-page">
         <div class="info">
           <div class="sub-header">
-            <span class="span-me">Contact Me</span>
-            <button onclick="getHelloThomas()"> Click </button>
-            <div id = "server"></div>
+            <span class="span-me">Comment Page</span>
+          </div>
+          <div class="comment-content">
+            <div class="left-side">
+              <form action="/data" method="POST">
+                <label for="fname"> First Name: </label><br />
+                <input type="text" id="fname" name="fname" /><br />
+                <label for="lname"> Last Name: </label><br />
+                <input type="text" id="lname" name="lname" /><br />
+                <textarea
+                  type="text"
+                  id="message"
+                  name="message-content"
+                  placeholder="Message:"
+                ></textarea>
+                <input type="submit" />
+              </form>
+            </div>
+            <div class="right-side">
+                <div class = "comment-history" id = "server"></div>
+            </div>
           </div>
         </div>
       </div>

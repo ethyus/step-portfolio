@@ -20,7 +20,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.List; 
+import java.util.ArrayList;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
@@ -30,21 +31,35 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-    messages = new ArrayList<String>();
-    messages.add("Cool");
-    messages.add("Apple");
-    messages.add("Candy");
-
+    
     String json = convertToJsonUsingGson(messages);
     response.setContentType("application/json;");
     response.getWriter().println(json);
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+
+      String message = getMessage(request);
+
+      if (messages == null){
+          messages = new ArrayList<>();
+          messages.add(message);
+      } else{
+          messages.add(message);
+      }
+
+      response.sendRedirect("/index.html#comment-page");
   }
 
   private String convertToJsonUsingGson(List<String> messages) {
     Gson gson = new Gson();
     String json = gson.toJson(messages);
     return json;
+  }
+  private String getMessage(HttpServletRequest request){
+    String message =  request.getParameter("message-content");
+    return message;
   }
 
 }

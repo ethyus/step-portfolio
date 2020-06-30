@@ -12,9 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-async function getComment(){
-    const response = await fetch("/data");
-    const text = await response.json();
-    document.getElementById("server").innerText = text[0]
+async function getComment() {
+  const response = await fetch("/data");
+  const text = await response.json();
+  const comments = document.getElementById("server");
+  if (text == null) {
+    comments.append(createHeaderElement("No Messages Available"));
+  } else {
+    try {
+      text.forEach((message) => {
+        comments.appendChild(createListElement(message));
+      });
+    } catch (err) {
+      let error = "Cannot Display Message -> " + String(err);
+      comments.append(createHeaderElement(error));
+    }
+  }
+}
+function createListElement(text) {
+  const liElement = document.createElement("li");
+  liElement.innerText = text;
+  return liElement;
+}
+function createHeaderElement(text) {
+  const h2Element = document.createElement("h2");
+  h2Element.innerText = text;
+  return h2Element;
 }
