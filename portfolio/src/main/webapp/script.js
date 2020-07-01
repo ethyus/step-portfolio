@@ -12,22 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-async function getComment() {
-  const response = await fetch("/data");
-  const text = await response.json();
+function getComment() {
+
   const comments = document.getElementById("server");
-  if (text == null) {
-    comments.append(createHeaderElement("No Messages Available"));
-  } else {
-    try {
-      text.forEach((message) => {
-        comments.appendChild(createListElement(message));
-      });
-    } catch (err) {
-      let error = "Cannot Display Message -> " + String(err);
+
+  // Get nested Json Objects
+  const info = fetch("/data")
+    .then((info) => info.json())
+    .then((info) => {
+      if (!("messageInfo" in info)) {
+        comments.append(createHeaderElement("No Messages Available"));
+      } else if (info["messageInfo"]["history"].length == 0){
+        comments.append(createHeaderElement("No Messages Available"));
+      } else {
+        info["messageInfo"]["history"].forEach((message) => {
+          comments.appendChild(createListElement(message));
+        });
+      }
+    })
+    .catch(() => {
+      let error = "Cannot Display Message";
       comments.append(createHeaderElement(error));
-    }
-  }
+    });
 }
 function createListElement(text) {
   const liElement = document.createElement("li");
