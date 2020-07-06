@@ -17,23 +17,38 @@ function getComment() {
   const comments = document.getElementById("server");
 
   // Get nested Json Objects
-  const info = fetch("/data")
+  const info = fetch("/data", {method: 'GET'})
     .then((info) => info.json())
     .then((info) => {
+      console.log(info);
+      console.log(info["messageInfo"]);
       if (!("messageInfo" in info)) {
         comments.append(createHeaderElement("No Messages Available"));
       } else if (info["messageInfo"]["history"].length == 0){
         comments.append(createHeaderElement("No Messages Available"));
       } else {
-        info["messageInfo"]["history"].forEach((message) => {
-          comments.appendChild(createListElement(message));
+        info["messageInfo"]["history"].forEach((content) => {
+        comments.appendChild(createListElement(content.message));
         });
+      }
+
+      // Prompt users that inputs were invalid
+      if (info["messageInfo"]["error"]){
+        nameError = document.getElementById("message_error");
+        nameError.style.borderColor = "red";
+        nameError.innerText = "Invalid Message - Must include a message"
+      }
+      if (info["nameInfo"]["error"]){
+        messageError = document.getElementById("name_error");
+        messageError.style.borderColor = "red";
+        messageError.innerText = "Invalid Name - Can only include alphabets"
       }
     })
     .catch(() => {
       let error = "Cannot Display Message";
       comments.append(createHeaderElement(error));
     });
+
 }
 function createListElement(text) {
   const liElement = document.createElement("li");

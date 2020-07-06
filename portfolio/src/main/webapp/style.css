@@ -25,8 +25,7 @@ body {
   box-sizing: border-box;
   height: 10vh;
 }
-
-li,
+nav ul li,
 a {
   font-size: 1rem;
   color: #edf0f1;
@@ -144,6 +143,7 @@ h2 {
 .info {
   position: absolute;
   padding: 100px;
+  width: 100%;
 }
 
 .sub-header {
@@ -178,13 +178,31 @@ h2 {
 
 .resume-list li i {
   padding: 0 2px;
-  font-size: 24px
+  font-size: 24px;
 }
-
+/* Comment Page */
 
 .section-4 {
-  height: 500px;
+  height: 700px;
   background-color: #b7c2c2;
+}
+.comment-content {
+  padding: 20px 0 0 0;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+#message {
+  width: 400px;
+  height: 200px;
+}
+
+.message-error{
+    color:red;
+}
+.comment-header{
+    padding: 0 0 10 0;
 }
 
 @media (min-width: 1200px) {
@@ -193,6 +211,11 @@ h2 {
   }
   li a i {
     font-size: 3.5rem;
+  }
+  .comment-content{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(1, 1fr);
   }
 }
 
@@ -222,11 +245,12 @@ h2 {
   h2 {
     font-size: 1.8rem;
   }
-  .section-2, .section-3{
-      height: 650px;
+  .section-2,
+  .section-3 {
+    height: 650px;
   }
-  .info{
-      padding:50px;
+  .info {
+    padding: 50px;
   }
 }
 
@@ -250,15 +274,19 @@ h2 {
   li a i {
     font-size: 2rem;
   }
-  .span-me{
-      padding:5px 10px;
-      font-size:12px;
+  .span-me {
+    padding: 5px 10px;
+    font-size: 12px;
   }
-  .resume-list li{
-      font-size:18px
+  .resume-list li {
+    font-size: 18px;
   }
-  .info{
-      padding: 30px;
+  .info {
+    padding: 30px;
+  }
+
+  .right-side ul li {
+    color: black;
   }
 }
 
@@ -278,12 +306,12 @@ h2 {
   h2 {
     font-size: 1.5rem;
   }
-    .span-me{
-      padding:5px 10px;
-      font-size:8px;
+  .span-me {
+    padding: 5px 10px;
+    font-size: 8px;
   }
-    .resume-list li{
-      font-size:16px
+  .resume-list li {
+    font-size: 16px;
   }
 }
 

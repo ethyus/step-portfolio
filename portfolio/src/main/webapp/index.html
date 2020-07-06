@@ -163,20 +163,20 @@
           <div class="comment-content">
             <div class="left-side">
               <form action="/data" method="POST">
-                <label for="fname"> First Name: </label><br />
-                <input type="text" id="fname" name="fname" /><br />
-                <label for="lname"> Last Name: </label><br />
-                <input type="text" id="lname" name="lname" /><br />
+                <label for="name"> Name: </label><span id = "name_error" style ="color:red";></span><br/>
+                <input type="text" id="name" name="name" placeholder="Your name"/><br />
+                <label for="message"> Message: </label><span id = "message_error" style ="color:red";></span><br/>
                 <textarea
                   type="text"
                   id="message"
                   name="message-content"
-                  placeholder="Message:"
+                  placeholder="Your messsage"
                 ></textarea>
                 <input type="submit" />
               </form>
             </div>
             <div class="right-side">
+                <div class = "comment-header">Comment History</div>
                 <div class = "comment-history" id = "server"></div>
             </div>
           </div>

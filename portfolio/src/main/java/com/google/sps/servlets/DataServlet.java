@@ -14,6 +14,13 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.sps.data.Comment;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -32,17 +39,40 @@ import java.util.Map;
 public class DataServlet extends HttpServlet {
 
   private HashMap<String, HashMap<String,Object>> information;  
-  private List<String> messages;
+
+  private String regex = "^[a-zA-Z ]+$";
+  private Pattern pattern =  Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+  private Matcher matcher = pattern.matcher(""); 
 
   @Override
   public void init(){
-      messages = new ArrayList<>();
       information = new HashMap<String, HashMap<String,Object>>();
+      information.put("messageInfo", new HashMap<String, Object>());
+      information.put("nameInfo", new HashMap<String, Object>());
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
+        // Query comments from DataStore as entities
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    List<Comment> comments = new ArrayList<>();
+    for (Entity entity: results.asIterable()) {
+        long id = entity.getKey().getId();
+        String name = (String) entity.getProperty("name");
+        String message = (String) entity.getProperty("message");
+        long timestamp = (long) entity.getProperty("timestamp");
+
+        Comment comment = new Comment(id, name, message, timestamp);
+        comments.add(comment);
+    }
+
+    information.get("messageInfo").put("history", comments);
+
     String json = convertToJsonUsingGson(information);
     response.setContentType("application/json;");
     response.getWriter().println(json);
@@ -50,19 +80,35 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-      
+
       information = checkValidity(request);
 
+          // Send invalid input to client for correction
       if (((Boolean) information.get("nameInfo").get("error") == true) || 
           ((Boolean) information.get("messageInfo").get("error") == true)){
-          information.get("messageInfo").put("history", messages);
+
           response.sendRedirect("/index.html#comment-page");
       } else {
+          // Store valid input in datastore
           String message = (String) information.get("messageInfo").get("message");
-          messages.add(message);
-          information.get("messageInfo").put("history", messages);
+          String name = (String) information.get("nameInfo").get("name");
+
+          createEntity("Comment", name, message);
+
           response.sendRedirect("/index.html#comment-page");
       }
+  }
+
+  private void createEntity(String kind, String name, String message){
+      long timestamp= System.currentTimeMillis();
+
+      Entity commentEntity = new Entity(kind);
+      commentEntity.setProperty("name", name);
+      commentEntity.setProperty("message", message);
+      commentEntity.setProperty("timestamp", timestamp);
+
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(commentEntity);
   }
 
   private String convertToJsonUsingGson(HashMap<String, HashMap<String,Object>> messages) {
@@ -70,6 +116,7 @@ public class DataServlet extends HttpServlet {
     String json = gson.toJson(messages);
     return json;
   }
+
   private HashMap<String, HashMap<String,Object>> checkValidity(HttpServletRequest request){
 
     HashMap<String, HashMap<String,Object>> info = new HashMap<>();
@@ -82,7 +129,7 @@ public class DataServlet extends HttpServlet {
     name.put("name", nameStr);
     message.put("message", messageStr);
     System.out.println(info);
-    if (!validateName(nameStr)){
+    if (!validateName(nameStr, matcher)){
         name.put("error", true);
     } else {
         name.put("error", false);
@@ -98,12 +145,12 @@ public class DataServlet extends HttpServlet {
 
     return info;
   }
-  private boolean validateName(String text){
-      String regex = "^[a-zA-Z ]+$";
-      Pattern pattern =  Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-      Matcher matcher = pattern.matcher(text); 
+
+  private boolean validateName(String text, Matcher match){
+      matcher.reset(text);
       return matcher.find(); 
   }
+
   private boolean validateMessage(String text){
       return text == null || text.trim().length() == 0;
   }
