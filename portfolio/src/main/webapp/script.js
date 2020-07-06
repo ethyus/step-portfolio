@@ -20,8 +20,6 @@ function getComment() {
   const info = fetch("/data", {method: 'GET'})
     .then((info) => info.json())
     .then((info) => {
-      console.log(info);
-      console.log(info["messageInfo"]);
       if (!("messageInfo" in info)) {
         comments.append(createHeaderElement("No Messages Available"));
       } else if (info["messageInfo"]["history"].length == 0){
@@ -50,11 +48,13 @@ function getComment() {
     });
 
 }
+
 function createListElement(text) {
   const liElement = document.createElement("li");
   liElement.innerText = text;
   return liElement;
 }
+
 function createHeaderElement(text) {
   const h2Element = document.createElement("h2");
   h2Element.innerText = text;
