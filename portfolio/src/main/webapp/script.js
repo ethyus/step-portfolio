@@ -17,7 +17,7 @@ function getComment() {
   const comments = document.getElementById("server");
 
   // Get nested Json Objects
-  const info = fetch("/data", {method: 'GET'})
+  const info = fetch("/data")
     .then((info) => info.json())
     .then((info) => {
       if (!("messageInfo" in info)) {
@@ -39,7 +39,7 @@ function getComment() {
       if (info["nameInfo"]["error"]){
         messageError = document.getElementById("name_error");
         messageError.style.borderColor = "red";
-        messageError.innerText = "Invalid Name - Can only include alphabets"
+        messageError.innerText = "Invalid Name - Can only include alphabetial characters"
       }
     })
     .catch(() => {

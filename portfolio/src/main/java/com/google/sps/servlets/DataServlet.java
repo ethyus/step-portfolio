@@ -40,9 +40,9 @@ public class DataServlet extends HttpServlet {
 
   private HashMap<String, HashMap<String,Object>> information;  
 
-  private String regex = "^[a-zA-Z ]+$";
-  private Pattern pattern =  Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-  private Matcher matcher = pattern.matcher(""); 
+  // Used in validateName() function
+  private static final String regex = "^[a-zA-Z ]+$";
+  private static final Pattern pattern =  Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 
   @Override
   public void init(){
@@ -54,7 +54,7 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
-        // Query comments from DataStore as entities
+    // Query comments from DataStore as entities
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -83,32 +83,32 @@ public class DataServlet extends HttpServlet {
 
       information = checkValidity(request);
 
-          // Send invalid input to client for correction
+      // Send invalid input to client for correction
       if (((Boolean) information.get("nameInfo").get("error") == true) || 
           ((Boolean) information.get("messageInfo").get("error") == true)){
 
-          response.sendRedirect("/index.html#comment-page");
       } else {
+
           // Store valid input in datastore
           String message = (String) information.get("messageInfo").get("message");
           String name = (String) information.get("nameInfo").get("name");
 
-          createEntity("Comment", name, message);
-
-          response.sendRedirect("/index.html#comment-page");
+          storeComment("Comment", name, message);
       }
+
+      response.sendRedirect("/index.html#comment-page");
   }
 
-  private void createEntity(String kind, String name, String message){
-      long timestamp= System.currentTimeMillis();
+  private void storeComment(String kind, String name, String message){
+    long timestamp= System.currentTimeMillis();
 
-      Entity commentEntity = new Entity(kind);
-      commentEntity.setProperty("name", name);
-      commentEntity.setProperty("message", message);
-      commentEntity.setProperty("timestamp", timestamp);
+    Entity commentEntity = new Entity(kind);
+    commentEntity.setProperty("name", name);
+    commentEntity.setProperty("message", message);
+    commentEntity.setProperty("timestamp", timestamp);
 
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      datastore.put(commentEntity);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(commentEntity);
   }
 
   private String convertToJsonUsingGson(HashMap<String, HashMap<String,Object>> messages) {
@@ -129,7 +129,7 @@ public class DataServlet extends HttpServlet {
     name.put("name", nameStr);
     message.put("message", messageStr);
     System.out.println(info);
-    if (!validateName(nameStr, matcher)){
+    if (!validateName(nameStr, pattern)){
         name.put("error", true);
     } else {
         name.put("error", false);
@@ -146,8 +146,8 @@ public class DataServlet extends HttpServlet {
     return info;
   }
 
-  private boolean validateName(String text, Matcher match){
-      matcher.reset(text);
+  private boolean validateName(String text, Pattern pattern){
+      Matcher matcher = pattern.matcher(text); 
       return matcher.find(); 
   }
 
