@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
   </head>
-  <body onload = "getComment()">
-    <div class="global-container" id="home" >
+  <body onload="start()">
+    <div class="global-container" id="home">
       <div class="nav-container">
         <nav>
           <ul class="logo-links">
@@ -163,9 +163,16 @@
           <div class="comment-content">
             <div class="left-side">
               <form action="/data" method="POST">
-                <label for="name"> Name: </label><span id = "name_error" style ="color:red";></span><br/>
-                <input type="text" id="name" name="name" placeholder="Your name"/><br />
-                <label for="message"> Message: </label><span id = "message_error" style ="color:red";></span><br/>
+                <label for="name"> Name: </label
+                ><span id="name_error" style="color: red;" ;></span><br />
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Your name"
+                /><br />
+                <label for="message"> Message: </label
+                ><span id="message_error" style="color: red;" ;></span><br />
                 <textarea
                   type="text"
                   id="message"
@@ -176,9 +183,32 @@
               </form>
             </div>
             <div class="right-side">
-                <div class = "comment-header">Comment History</div>
-                <div class = "comment-history" id = "server"></div>
+              <div class="comment-header">Comment History</div>
+              <div class="comment-history" id="server"></div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="section-5">
+        <div class="info">
+          <div class="sub-header">
+            <span class="span-me">Image Analyzer</span>
+          </div>
+          <div class="form-content">
+            <form
+              id="my-form"
+              class="hidden"
+              method="POST"
+              enctype="multipart/form-data"
+            >
+              <p>Type some text:</p>
+              <textarea name="message"></textarea>
+              <br />
+              <p>Upload an image:</p>
+              <input type="file" name="image" />
+              <br /><br />
+              <button>Submit</button>
+            </form>
           </div>
         </div>
       </div>
@@ -197,5 +227,6 @@
       });
     </script>
     <script src="typing.js"></script>
+    <script src="image_analyzer.js"></script>
   </body>
 </html>

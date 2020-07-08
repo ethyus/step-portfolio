@@ -205,6 +205,14 @@ h2 {
     padding: 0 0 10 0;
 }
 
+.section-5{
+    height: 600px;
+}
+
+.form-content{
+    padding: 20px 0 0 0;
+}
+
 @media (min-width: 1200px) {
   li a {
     font-size: 1rem;
