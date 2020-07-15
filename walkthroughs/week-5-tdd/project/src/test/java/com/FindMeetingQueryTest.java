@@ -59,6 +59,7 @@ public final class FindMeetingQueryTest {
   public void setUp() {
     query = new FindMeetingQuery();
   }
+  
 
   @Test
   public void optionsForNoAttendees() {
@@ -69,7 +70,7 @@ public final class FindMeetingQueryTest {
 
     Assert.assertEquals(expected, actual);
   }
-
+    
   @Test
   public void noOptionsForTooLongOfARequest() {
     // The duration should be longer than a day. This means there should be no options.
@@ -292,7 +293,9 @@ public final class FindMeetingQueryTest {
         new Event("Event 1", TimeRange.fromStartDuration(TIME_0800AM, DURATION_30_MINUTES),
             Arrays.asList(PERSON_A)),
         new Event("Event 2", TimeRange.fromStartDuration(TIME_0900AM, DURATION_30_MINUTES),
-            Arrays.asList(PERSON_B)));
+            Arrays.asList(PERSON_B)),
+        new Event("Event 3", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TimeRange.END_OF_DAY, true),
+            Arrays.asList(PERSON_C)));
 
     MeetingRequest request =
         new MeetingRequest(Arrays.asList(PERSON_A, PERSON_B), DURATION_30_MINUTES);
@@ -395,12 +398,13 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void unavailableOptionalAttendees() {
-    // Have one person, but make it so that there is just enough room at one point in the day to
-    // have the meeting.
+    // Since all optional attendees can't make it,
+    // Return Time Slot(s) with the most optional attendee instead
     //
     // Events  : |--A--|   |-----B-----|
     // Day     : |---------------------|
-    // Options :       
+    // Options : |---1-----|
+    //                     |------2----|
 
     Collection<Event> events = Arrays.asList(
         new Event("Event 1", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
@@ -414,10 +418,12 @@ public final class FindMeetingQueryTest {
 
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected =
-        Arrays.asList();
+        Arrays.asList(TimeRange.fromStartEnd(TIME_0830AM, TimeRange.END_OF_DAY, true), TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0845AM, false));
 
     Assert.assertEquals(expected, actual);
   }
+
+  
 
   /* Additional test cases for Optional Coding Challenge: 
   Implement an optimized version of the optional attendee functionality:
@@ -425,11 +431,10 @@ public final class FindMeetingQueryTest {
   time slot(s) that allow mandatory attendees and the greatest possible
   number of optional attendees to attend. 
   */
-
+    
   @Test
   public void optimizedCase1() {
-    // Have each person have different events. We should see two options because each person has
-    // split the restricted times.
+    // Return Time Slot with the most optional attendees
     //
     // Events  :       |--A--|     |--B--|
     //         :             |--C--|
@@ -464,8 +469,7 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void optimizedCase2() {
-    // Have each person have different events. We should see two options because each person has
-    // split the restricted times.
+    // Return Time Slot with the most optional attendees
     //
     // Events  :       |--A--|     |--B--|
     //         :             |--C--|
@@ -499,12 +503,12 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void optimizedCase3() {
-    // Have each person have different events. We should see two options because each person has
-    // split the restricted times.
+    // Return Time Slot with the most optional attendees
     //
     // Events  :       |--A--|     |--B--|
     //         :             |--C--|
     //         : |--D--|
+    //         : |------------E-----------|
     // Day     : |-----------------------------|
     // Options :                          |--1--|
 
@@ -534,5 +538,41 @@ public final class FindMeetingQueryTest {
 
     Assert.assertEquals(expected, actual);
   }
+  
+
+  @Test
+  public void optimizedCase4() {
+    // Case when there is no free block for ALL optional attendees. 
+    // Return the time slot with the most optional attendees
+    // Events 
+    //         :            |---------C--------|
+    //         : |--D--|
+    //         : |------------E----------------|
+    // Day     : |-----------------------------|
+    // Options :       |-1--|
+
+    Collection<Event> events = Arrays.asList(
+        new Event("Event 3", TimeRange.fromStartEnd(TIME_0830AM, TimeRange.END_OF_DAY, true),
+            Arrays.asList(PERSON_C)),
+        new Event("Event 4", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
+            Arrays.asList(PERSON_D)),
+        new Event("Event 5", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TimeRange.END_OF_DAY, true),
+            Arrays.asList(PERSON_E)));
+
+    MeetingRequest request =
+        new MeetingRequest(Arrays.asList(), DURATION_30_MINUTES);
+
+    // Add Optional attendees
+    request.addOptionalAttendee(PERSON_C);
+    request.addOptionalAttendee(PERSON_D);
+    request.addOptionalAttendee(PERSON_E);
+
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected =
+        Arrays.asList(TimeRange.fromStartEnd(TIME_0800AM, TIME_0830AM, false));
+
+    Assert.assertEquals(expected, actual);
+  }
+ 
 }
 

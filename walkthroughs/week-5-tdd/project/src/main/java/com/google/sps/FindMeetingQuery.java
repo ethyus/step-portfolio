@@ -31,78 +31,174 @@ public final class FindMeetingQuery {
     if (request.getDuration() > TimeRange.WHOLE_DAY.duration()){
         return Arrays.asList();
     }
-    // Get all mandatory meeting attendees
-    Set<String> attendees = new HashSet<>(request.getAttendees()); 
-
-    // Get all optional attendees
-    Set<String> optAttendees = new HashSet<>(request.getOptionalAttendees());
+    // Get all mandatory meeting attendees & optional attendees
+    Set<String> mandatoryAttendees = new HashSet<>(request.getAttendees()); 
+    Set<String> optionalAttendees = new HashSet<>(request.getOptionalAttendees());
     
-    // Process which events are from mandatory or optional attendees
+    // Process which events are mandatory to get required #
     ArrayList<TimeRange> mandatoryEvents = new ArrayList<>();
-    ArrayList<TimeRange> optEvents =  new ArrayList<>();
-    HashMap<String, ArrayList<TimeRange>> optAttendeesEvents = new HashMap<>();
-
-    for (String i: optAttendees) {
-        optAttendeesEvents.put(i, new ArrayList<TimeRange>());
-    }
-
     for (Event i: events) {
-        if (optAttendees.containsAll(i.getAttendees())) {
-            optEvents.add(i.getWhen());
-        } else if (attendees.containsAll(i.getAttendees())) {
+        if (mandatoryAttendees.containsAll(i.getAttendees())) {
             mandatoryEvents.add(i.getWhen());
         }
     }
 
-    // request has only mandatory attendees so return time slots for them
-    if (attendees.isEmpty() && !(optAttendees.isEmpty())) {
-        return driver(optEvents, request);
-    } // request has no mandatory attendees so return time slots for optional attendees only
-    else if (!(attendees.isEmpty()) && optAttendees.isEmpty()) { 
-        return driver(mandatoryEvents, request);
-    } // request has no attendees so return whole day as available
-    else if ((attendees.isEmpty() && optAttendees.isEmpty())) { 
-        return Arrays.asList(TimeRange.WHOLE_DAY);
+    if (!(mandatoryAttendees.isEmpty()) && optionalAttendees.isEmpty()) {
+        return getTimeSlotWithMandatoryAttendeesOnly(mandatoryEvents, request, TimeRange.START_OF_DAY, TimeRange.END_OF_DAY);
+    } 
+    else if ((mandatoryAttendees.isEmpty() && optionalAttendees.isEmpty())) { 
+        return fullDayAsOpenSlot();
+    } else {
+        return getTimeSlotWithMostOptionalAttendees(events, request, mandatoryAttendees, optionalAttendees, mandatoryEvents.size());
     }
+  }
 
-    // See if it's possible to optimize timeslots with mandatory & optional attendees
-    // Maintain a frequency table of timeslot to available optional attendees
+  public Collection<TimeRange> getTimeSlotWithMostOptionalAttendees(Collection<Event> events, MeetingRequest request, 
+        Set<String> mandatoryAttendees, Set<String> optionalAttendees, int numOfMandatoryEvents){
+    
+      // Generate all possible intervals in O(1) time
+      int num = 60*24;
+      int meetingDuration = (int) request.getDuration();
+      ArrayList<TimeRange> possibleIntervals = new ArrayList<>();
+      for (int currentMinute = 0; currentMinute < num - meetingDuration; currentMinute++) {
+          possibleIntervals.add(TimeRange.fromStartEnd(currentMinute, currentMinute + meetingDuration, false));
+      }
+      
+      // Maintain a frequency of timeSlot that already works for all mandatory attendee
+      // to the # of optional attendees
+      Map<TimeRange, Integer> frequency = new HashMap<>();
 
-    Map<TimeRange, Integer> frequency = new HashMap<>();
-    Collection<TimeRange> availableTimeSlots = driver(mandatoryEvents, request);
+      // Maintain pointers
+      int startTime = 0;
+      int optimalEndTime = 0;
+      int prevOptionalAttendee = 0;
+      int prevMandatoryAttendee = 0;
 
-    for (TimeRange i: availableTimeSlots) {
-      for (TimeRange j: optEvents) {
-        if (i.overlaps(j)) {
-            continue;
-        } else {
-            if (frequency.containsKey(i)) {
-                frequency.merge(i, 1, (a,b) -> a + b);
+      // Check all possible intervals and return the optimal one with the most optional attendees
+      for (int j = 0; j < possibleIntervals.size(); j++) {
+        TimeRange curInterval = possibleIntervals.get(j);
+        int curMandatoryAttendee = 0;
+        int curOptionalAttendee = 0;
+        second:
+        for (Event i : events) {
+            // events do not overlap
+            if (!curInterval.overlaps(i.getWhen())) {
+                if (optionalAttendees.containsAll(i.getAttendees())) {
+                    curOptionalAttendee++;
+                } else if (mandatoryAttendees.containsAll(i.getAttendees())) {
+                    curMandatoryAttendee++;
+                }
             } else {
-                frequency.put(i, 1); 
+                // events overlap
+                if (mandatoryAttendees.containsAll(i.getAttendees())) {
+                    break second;
+                }
+            }
+        }
+
+        // Initializes variables for first event
+        if (j == 0) {
+            startTime = curInterval.start();
+            optimalEndTime = curInterval.end();
+            prevOptionalAttendee = curOptionalAttendee;
+            prevMandatoryAttendee = curMandatoryAttendee;
+            continue;
+        }
+
+        // In order for overlapping intervals to be extended, previous and current intervals
+        // can fit all mandatory attendees and have the same number of optional attendee
+        if (curMandatoryAttendee == numOfMandatoryEvents && curOptionalAttendee == prevOptionalAttendee) {
+
+            // Check if this interval can be extended from the previous one
+            if (prevMandatoryAttendee == numOfMandatoryEvents){
+                // Can merge with previous interval
+                optimalEndTime = curInterval.end();
+
+            } else {
+                // Not mergeable, must create a new interval
+                startTime = curInterval.start();
+                optimalEndTime = curInterval.end();
+            }
+        } else {
+            // Check if the previous interval can be added 
+            if (prevMandatoryAttendee == numOfMandatoryEvents) {
+                TimeRange slot = TimeRange.fromStartEnd(startTime, optimalEndTime, false);
+                frequency.put(slot, prevOptionalAttendee);
+                
+            }
+            startTime = curInterval.start();
+            optimalEndTime = curInterval.end();
+        }
+
+        prevMandatoryAttendee = curMandatoryAttendee;
+        prevOptionalAttendee = curOptionalAttendee;
+
+        if (j == possibleIntervals.size() - 1) {
+            // Check if this last interval can be extended from the previous one
+            if (prevMandatoryAttendee == numOfMandatoryEvents) {
+                TimeRange slot = TimeRange.fromStartEnd(startTime, optimalEndTime, true);
+                frequency.put(slot, prevOptionalAttendee);
             }
         }
       }
-    }
-    // Check to see if all optional attendees can attend 
-    Set<Integer> attendeeNumbers = new HashSet<> (frequency.values());
-  
-    // Optimize
-    if (frequency.size() >= 1) {
-        if (attendeeNumbers.size() == 1 && attendeeNumbers.contains(optEvents.size())) {
-            // All optional attendees can attend 
-            return new ArrayList<TimeRange>(frequency.keySet());
-        }
-        else {
-            // Not all optional attendees can attend, try to optimize
-            return getOptimizedTimeSlot(frequency);
-        }
-    } 
-
-    return availableTimeSlots;
+      
+      // Return a collection of times with the maximum number of optional attendees
+      return getKeysWithMaximumValue(frequency);
   }
 
-  public Collection<TimeRange> getOptimizedTimeSlot(Map<TimeRange, Integer> frequency){
+  public Collection<TimeRange> getTimeSlotWithMandatoryAttendeesOnly(ArrayList<TimeRange> times, MeetingRequest request, int startTime, int endTime){
+      
+    ArrayList<TimeRange> openTime = new ArrayList<>();
+
+    // Edge case if there are no conflicting events
+    if (times.isEmpty()) {
+        return Arrays.asList(TimeRange.WHOLE_DAY);
+    }
+
+    // Sort all event by ascending start times O(nlogn)
+    times.sort(TimeRange.ORDER_BY_START);
+
+    // Create dummy "start of day" & "end of day" events
+    times.add(0, TimeRange.fromStartEnd(startTime, startTime, false));
+    times.add(TimeRange.fromStartEnd(endTime, endTime, false));
+
+    // Maintain a pointer for optimal ending points
+    TimeRange prevEvent = times.get(0);
+    int optimalEndTime = prevEvent.end();
+
+    for (int i = 1; i < times.size(); i++){
+        TimeRange nextEvent = times.get(i);
+
+        // Move on from overlapping events
+        if (prevEvent.overlaps(nextEvent)) {
+            optimalEndTime = Math.max(prevEvent.end(), nextEvent.end());
+            prevEvent = nextEvent;
+            continue;
+        }
+
+        // Non-overlapping events
+        int duration = nextEvent.start() - optimalEndTime;
+        if (duration >= request.getDuration()){
+            // Deals with inclusivity if this is the last event
+            if (i == times.size() - 1) {
+                openTime.add(TimeRange.fromStartEnd(optimalEndTime, nextEvent.start(), true));
+            } else {
+                openTime.add(TimeRange.fromStartEnd(optimalEndTime, nextEvent.start(), false));
+            }
+        }
+
+        optimalEndTime = nextEvent.end();
+        prevEvent = nextEvent;
+    }
+
+    return openTime;
+  }
+
+  public Collection<TimeRange> fullDayAsOpenSlot(){
+      return Arrays.asList(TimeRange.WHOLE_DAY);
+  }
+
+  public Collection<TimeRange> getKeysWithMaximumValue(Map<TimeRange, Integer> frequency){
 
     // Return the time slot with the max # of mandatory & optional attendees
     Map.Entry<TimeRange, Integer> maxEntry = null;
@@ -121,66 +217,5 @@ public final class FindMeetingQuery {
         }
     }
     return timeSlots;
-  }
-  
-  public Collection<TimeRange> driver(ArrayList<TimeRange> listOfTime, MeetingRequest request){
-    // Main logic of algorithm
-
-    ArrayList<TimeRange> openTime = new ArrayList<>();
-
-    // Edge case if there are no conflicting events
-    if (listOfTime.isEmpty()) {
-        return Arrays.asList(TimeRange.WHOLE_DAY);
-    }
-
-    // Sort all event by ascending start times O(nlogn)
-    listOfTime.sort(TimeRange.ORDER_BY_START);
-
-    // Maintain a pointer for local max of ending points
-    TimeRange prevEvent = listOfTime.get(0);
-    int localMax = prevEvent.end();
-
-    // Check for potential open interval from start of day to first event
-    if (prevEvent.start() > TimeRange.START_OF_DAY){
-        int interval = prevEvent.start() - TimeRange.START_OF_DAY;
-        if (interval >= request.getDuration()){
-            openTime.add(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, prevEvent.start(), false));
-            localMax = prevEvent.end();
-        }
-    }
-
-    for (int i = 1; i < listOfTime.size(); i++){
-        TimeRange nextEvent = listOfTime.get(i);
-
-        // Move on from overlapping events
-        // 1st case considers nested events
-        if (prevEvent.overlaps(nextEvent) && localMax >= nextEvent.end()){
-            prevEvent = listOfTime.get(i);
-            continue;
-        } else if (prevEvent.overlaps(nextEvent)) {
-            localMax = nextEvent.end();
-            prevEvent = listOfTime.get(i);
-            continue;
-        }
-
-        // Non-overlapping events
-        int openInterval = nextEvent.start() - localMax;
-        if (openInterval >= request.getDuration()){
-            openTime.add(TimeRange.fromStartEnd(localMax, nextEvent.start(), false));
-        }
-
-        localMax = Math.max(localMax, nextEvent.end());
-        prevEvent = listOfTime.get(i);
-    }
-    
-    // Check for potential interval from last event to end of day
-    if (localMax < TimeRange.END_OF_DAY){
-        int interval = TimeRange.END_OF_DAY - localMax;
-        if (interval >= request.getDuration()){
-            openTime.add(TimeRange.fromStartEnd(localMax, TimeRange.END_OF_DAY, true));
-        }
-    }
-
-    return openTime;
   }
 }
