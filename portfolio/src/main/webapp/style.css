@@ -124,6 +124,32 @@ h2 {
   padding: 50px;
   height: 100%;
 }
+
+.userImage {
+    height: 100%;
+    width:100%;
+}
+.img-wrap {
+  height: 300px;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.9;
+  position: relative;
+}
+
+.img-wrap .close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 100;
+  opacity: 0.1
+}
+
+.img-wrap:hover .close{
+    opacity: 1;
+}
+
 .image-wrapper {
   height: 300px;
   width: 100%;
@@ -212,6 +238,34 @@ h2 {
 .form-content{
     padding: 20px 0 0 0;
 }
+
+.infoWrapper {
+    padding: 100px;
+}
+
+.userStatus-container {
+    height: 200px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.main123 {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width:100%;
+    padding: 0 50px;
+}
+
+#logStatus {
+    color: black;
+}
+
+#logStatus:hover {
+    color: #0088a9;
+}
+
 
 @media (min-width: 1200px) {
   li a {
