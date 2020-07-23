@@ -1,0 +1,7 @@
+indexes:
+
+- kind: Image
+  properties:
+  - name: email
+  - name: timestamp
+    direction: desc

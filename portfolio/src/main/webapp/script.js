@@ -18,9 +18,15 @@ function start(){
     fetchBlobstoreUrlAndShowForm();
 }
 
+function startImageGallery() {
+    fetchUserStatus();
+    fetchBlobstoreUrlForImageGallery();
+    getImages();
+}
+
 // Set form action to blobstore URL
 function fetchBlobstoreUrlAndShowForm() {
-  fetch('/blobstore-upload-url')
+  fetch('/blobstore-upload-image-analyzer')
     .then((response) => {
       return response.text();
     })
@@ -29,6 +35,84 @@ function fetchBlobstoreUrlAndShowForm() {
       messageForm.action = imageUploadUrl;
       messageForm.classList.remove('hidden');
     });
+}
+
+function fetchUserStatus() {
+  fetch('/loginForGallery')
+    .then((response) => response.json())
+    .then((userJson) => {
+        const status = document.getElementById('logStatus');
+        const formStatus = document.getElementById('image-form');
+        if (userJson['email'] == 'null') {
+            status.setAttribute("href", userJson['loginUrl']);
+            status.innerText = "Login if you want access";
+            formStatus.style.display = "none";
+
+        } else {
+            status.setAttribute("href", userJson['logoutUrl']);
+            status.innerText = "Logout";
+            formStatus.style.display = "block";
+        }
+    })
+}
+
+function fetchBlobstoreUrlForImageGallery() {
+  fetch('/blobstore-upload-url-gallery')
+    .then((response) => response.text())
+    .then((imageUploadUrl) => {
+      const messageForm = document.getElementById('my-form-gallery');
+      messageForm.action = imageUploadUrl;
+      messageForm.classList.remove('hidden');
+    });
+}
+
+function getImages() {
+  
+  const imageGallery = document.getElementById("current-images");
+  const images = fetch('/newimage')
+    .then((images) => {
+        console.log(images);
+        return images.json();
+    })
+    .then((imageJson) => {
+        console.log(imageJson);
+        imageJson["userImages"].forEach((image) => {
+            imageGallery.appendChild(createImageElement(image));
+        })
+    })
+}
+
+function createImageElement(image) {
+    // Create image warpper div
+    const imageWrapper = document.createElement('div');
+    imageWrapper.classList.add('img-wrap');
+
+    // Get Blob image from servlet
+    const imgElement = document.createElement('img');
+    imgElement.setAttribute('src', "/serve?key=" + image["blobKey"]);
+    imgElement.classList.add("userImage");
+
+    // Add delete button
+
+    const deleteButtonElement = document.createElement('button');
+    deleteButtonElement.classList.add('close');
+    deleteButtonElement.innerText = 'Delete';
+    deleteButtonElement.addEventListener('click', () => {
+        deleteImage(image);
+
+        // Remove the task from the DOM.
+        imageWrapper.remove();
+    });
+    imageWrapper.appendChild(imgElement);
+    imageWrapper.appendChild(deleteButtonElement);
+
+    return imageWrapper;
+}
+
+function deleteImage(image) {
+  const params = new URLSearchParams();
+  params.append('id', image.id);
+  fetch('/delete-image', {method: 'POST', body: params});
 }
 
 function getComment() {
