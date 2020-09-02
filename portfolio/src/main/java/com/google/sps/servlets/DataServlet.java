@@ -20,7 +20,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List; 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -30,13 +30,13 @@ import java.util.Map;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private HashMap<String, HashMap<String,Object>> information;  
+  private HashMap<String, HashMap<String, Object>> information;
   private List<String> messages;
 
   @Override
-  public void init(){
-      messages = new ArrayList<>();
-      information = new HashMap<String, HashMap<String,Object>>();
+  public void init() {
+    messages = new ArrayList<>();
+    information = new HashMap<String, HashMap<String, Object>>();
   }
 
   @Override
@@ -48,44 +48,44 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-      information = checkValidity(request);
-      if (((Boolean) information.get("nameInfo").get("error") == true) || 
-          ((Boolean) information.get("messageInfo").get("error") == true)){
-          information.get("messageInfo").put("history", messages);
-          response.sendRedirect("/index.html#comment-page");
-      } else {
-          String message = (String) information.get("messageInfo").get("message");
-          messages.add(message);
-          information.get("messageInfo").put("history", messages);
-          response.sendRedirect("/index.html#comment-page");
-      }
+    information = checkValidity(request);
+    if (((Boolean) information.get("nameInfo").get("error") == true)
+        || ((Boolean) information.get("messageInfo").get("error") == true)) {
+      information.get("messageInfo").put("history", messages);
+      response.sendRedirect("/index.html#comment-page");
+    } else {
+      String message = (String) information.get("messageInfo").get("message");
+      messages.add(message);
+      information.get("messageInfo").put("history", messages);
+      response.sendRedirect("/index.html#comment-page");
+    }
   }
 
-  private String convertToJsonUsingGson(HashMap<String, HashMap<String,Object>> messages) {
+  private String convertToJsonUsingGson(HashMap<String, HashMap<String, Object>> messages) {
     Gson gson = new Gson();
     String json = gson.toJson(messages);
     return json;
   }
 
-  private HashMap<String, HashMap<String,Object>> checkValidity(HttpServletRequest request) {
-    HashMap<String, HashMap<String,Object>> info = new HashMap<>();
+  private HashMap<String, HashMap<String, Object>> checkValidity(HttpServletRequest request) {
+    HashMap<String, HashMap<String, Object>> info = new HashMap<>();
     HashMap<String, Object> message = new HashMap<>();
     HashMap<String, Object> name = new HashMap<>();
 
     String nameStr = request.getParameter("name");
     String messageStr = request.getParameter("message-content");
-    
+
     name.put("name", nameStr);
     message.put("message", messageStr);
-    if (!validateName(nameStr)){
-        name.put("error", true);
+    if (!validateName(nameStr)) {
+      name.put("error", true);
     } else {
-        name.put("error", false);
+      name.put("error", false);
     }
-    if (validateMessage(messageStr)){
-        message.put("error", true);
+    if (validateMessage(messageStr)) {
+      message.put("error", true);
     } else {
-        message.put("error", false);
+      message.put("error", false);
     }
 
     info.put("nameInfo", name);
@@ -94,13 +94,13 @@ public class DataServlet extends HttpServlet {
   }
 
   private boolean validateName(String text) {
-      String regex = "^[a-zA-Z ]+$";
-      Pattern pattern =  Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-      Matcher matcher = pattern.matcher(text); 
-      return matcher.find(); 
+    String regex = "^[a-zA-Z ]+$";
+    Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+    Matcher matcher = pattern.matcher(text);
+    return matcher.find();
   }
 
   private boolean validateMessage(String text) {
-      return text == null || text.trim().length() == 0;
+    return text == null || text.trim().length() == 0;
   }
 }
