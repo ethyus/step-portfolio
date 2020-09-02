@@ -27,7 +27,6 @@ import java.util.regex.Matcher;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
@@ -42,17 +41,14 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    
     String json = convertToJsonUsingGson(information);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
 
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-      
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
       information = checkValidity(request);
-
       if (((Boolean) information.get("nameInfo").get("error") == true) || 
           ((Boolean) information.get("messageInfo").get("error") == true)){
           information.get("messageInfo").put("history", messages);
@@ -70,8 +66,8 @@ public class DataServlet extends HttpServlet {
     String json = gson.toJson(messages);
     return json;
   }
-  private HashMap<String, HashMap<String,Object>> checkValidity(HttpServletRequest request){
 
+  private HashMap<String, HashMap<String,Object>> checkValidity(HttpServletRequest request) {
     HashMap<String, HashMap<String,Object>> info = new HashMap<>();
     HashMap<String, Object> message = new HashMap<>();
     HashMap<String, Object> name = new HashMap<>();
@@ -81,7 +77,6 @@ public class DataServlet extends HttpServlet {
     
     name.put("name", nameStr);
     message.put("message", messageStr);
-    System.out.println(info);
     if (!validateName(nameStr)){
         name.put("error", true);
     } else {
@@ -95,16 +90,17 @@ public class DataServlet extends HttpServlet {
 
     info.put("nameInfo", name);
     info.put("messageInfo", message);
-
     return info;
   }
-  private boolean validateName(String text){
+
+  private boolean validateName(String text) {
       String regex = "^[a-zA-Z ]+$";
       Pattern pattern =  Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
       Matcher matcher = pattern.matcher(text); 
       return matcher.find(); 
   }
-  private boolean validateMessage(String text){
+
+  private boolean validateMessage(String text) {
       return text == null || text.trim().length() == 0;
   }
 }
