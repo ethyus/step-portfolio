@@ -22,7 +22,7 @@ public class GalleryLoginServlet extends HttpServlet {
       String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
       String jsonLogOutInfo = convertToJson("null", logoutUrl, userEmail, true);
       response.setContentType("application/json;");
-      
+
       // Return Json file with logout URL
       response.getWriter().println(jsonLogOutInfo);
 
@@ -38,17 +38,17 @@ public class GalleryLoginServlet extends HttpServlet {
   }
 
   public class User {
-      private String loginUrl;
-      private String logoutUrl;
-      private String email;
-      private boolean showForm;
-      
-      public User(String loginUrl, String logoutUrl, String email, boolean showForm) {
-          this.loginUrl = loginUrl;
-          this.logoutUrl = logoutUrl;
-          this.email = email;
-          this.showForm = showForm;
-      }
+    private String loginUrl;
+    private String logoutUrl;
+    private String email;
+    private boolean showForm;
+
+    public User(String loginUrl, String logoutUrl, String email, boolean showForm) {
+      this.loginUrl = loginUrl;
+      this.logoutUrl = logoutUrl;
+      this.email = email;
+      this.showForm = showForm;
+    }
   }
 
   private String convertToJson(String loginUrl, String logoutUrl, String email, boolean showForm) {

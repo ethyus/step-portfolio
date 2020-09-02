@@ -22,5 +22,4 @@ public class ServeBlobServlet extends HttpServlet {
     BlobKey mykey = new BlobKey(request.getParameter("key"));
     blobstoreService.serve(mykey, response);
   }
-
 }

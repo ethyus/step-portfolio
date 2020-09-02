@@ -27,33 +27,30 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List; 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.HashMap;
 import java.util.Map;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private HashMap<String, HashMap<String,Object>> information;  
-
   // Used in validateName() function
   private static final String regex = "^[a-zA-Z ]+$";
-  private static final Pattern pattern =  Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+  private static final Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+  private HashMap<String, HashMap<String, Object>> information;
 
   @Override
-  public void init(){
-      information = new HashMap<String, HashMap<String,Object>>();
-      information.put("messageInfo", new HashMap<String, Object>());
-      information.put("nameInfo", new HashMap<String, Object>());
+  public void init() {
+    information = new HashMap<String, HashMap<String, Object>>();
+    information.put("messageInfo", new HashMap<String, Object>());
+    information.put("nameInfo", new HashMap<String, Object>());
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    
     // Query comments from DataStore as entities
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
@@ -61,14 +58,14 @@ public class DataServlet extends HttpServlet {
     PreparedQuery results = datastore.prepare(query);
 
     List<Comment> comments = new ArrayList<>();
-    for (Entity entity: results.asIterable()) {
-        long id = entity.getKey().getId();
-        String name = (String) entity.getProperty("name");
-        String message = (String) entity.getProperty("message");
-        long timestamp = (long) entity.getProperty("timestamp");
+    for (Entity entity : results.asIterable()) {
+      long id = entity.getKey().getId();
+      String name = (String) entity.getProperty("name");
+      String message = (String) entity.getProperty("message");
+      long timestamp = (long) entity.getProperty("timestamp");
 
-        Comment comment = new Comment(id, name, message, timestamp);
-        comments.add(comment);
+      Comment comment = new Comment(id, name, message, timestamp);
+      comments.add(comment);
     }
 
     information.get("messageInfo").put("history", comments);
@@ -79,28 +76,25 @@ public class DataServlet extends HttpServlet {
   }
 
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    information = checkValidity(request);
 
-      information = checkValidity(request);
+    // Send invalid input to client for correction
+    if (((Boolean) information.get("nameInfo").get("error") == true)
+        || ((Boolean) information.get("messageInfo").get("error") == true)) {
 
-      // Send invalid input to client for correction
-      if (((Boolean) information.get("nameInfo").get("error") == true) || 
-          ((Boolean) information.get("messageInfo").get("error") == true)){
+    } else {
+      String message = (String) information.get("messageInfo").get("message");
+      String name = (String) information.get("nameInfo").get("name");
 
-      } else {
+      storeComment("Comment", name, message);
+    }
 
-          // Store valid input in datastore
-          String message = (String) information.get("messageInfo").get("message");
-          String name = (String) information.get("nameInfo").get("name");
-
-          storeComment("Comment", name, message);
-      }
-
-      response.sendRedirect("/index.html#comment-page");
+    response.sendRedirect("/index.html#comment-page");
   }
 
-  private void storeComment(String kind, String name, String message){
-    long timestamp= System.currentTimeMillis();
+  private void storeComment(String kind, String name, String message) {
+    long timestamp = System.currentTimeMillis();
 
     Entity commentEntity = new Entity(kind);
     commentEntity.setProperty("name", name);
@@ -111,33 +105,32 @@ public class DataServlet extends HttpServlet {
     datastore.put(commentEntity);
   }
 
-  private String convertToJsonUsingGson(HashMap<String, HashMap<String,Object>> messages) {
+  private String convertToJsonUsingGson(HashMap<String, HashMap<String, Object>> messages) {
     Gson gson = new Gson();
     String json = gson.toJson(messages);
     return json;
   }
 
-  private HashMap<String, HashMap<String,Object>> checkValidity(HttpServletRequest request){
+  private HashMap<String, HashMap<String, Object>> checkValidity(HttpServletRequest request) {
 
-    HashMap<String, HashMap<String,Object>> info = new HashMap<>();
+    HashMap<String, HashMap<String, Object>> info = new HashMap<>();
     HashMap<String, Object> message = new HashMap<>();
     HashMap<String, Object> name = new HashMap<>();
 
     String nameStr = request.getParameter("name");
     String messageStr = request.getParameter("message-content");
-    
+
     name.put("name", nameStr);
     message.put("message", messageStr);
-    System.out.println(info);
-    if (!validateName(nameStr, pattern)){
-        name.put("error", true);
+    if (!validateName(nameStr, pattern)) {
+      name.put("error", true);
     } else {
-        name.put("error", false);
+      name.put("error", false);
     }
-    if (validateMessage(messageStr)){
-        message.put("error", true);
+    if (validateMessage(messageStr)) {
+      message.put("error", true);
     } else {
-        message.put("error", false);
+      message.put("error", false);
     }
 
     info.put("nameInfo", name);
@@ -146,12 +139,12 @@ public class DataServlet extends HttpServlet {
     return info;
   }
 
-  private boolean validateName(String text, Pattern pattern){
-      Matcher matcher = pattern.matcher(text); 
-      return matcher.find(); 
+  private boolean validateName(String text, Pattern pattern) {
+    Matcher matcher = pattern.matcher(text);
+    return matcher.find();
   }
 
-  private boolean validateMessage(String text){
-      return text == null || text.trim().length() == 0;
+  private boolean validateMessage(String text) {
+    return text == null || text.trim().length() == 0;
   }
 }

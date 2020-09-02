@@ -27,14 +27,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List; 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.HashMap;
 import java.util.Map;
 
-/** **/
 @WebServlet("/newimage")
 public class NewImageDataServlet extends HttpServlet {
 
@@ -44,44 +43,45 @@ public class NewImageDataServlet extends HttpServlet {
   public void init() {
     usersImages = new HashMap<>();
   }
-  
-  // Get users' images from datastore
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
     UserService userService = UserServiceFactory.getUserService();
-    
+
     // Only query for users' images if logged in
     List<Image> images = new ArrayList<>();
     if (userService.isUserLoggedIn()) {
-        String userEmail = userService.getCurrentUser().getEmail();
-        
-        Query query = new Query("Image").setFilter(new FilterPredicate("email", FilterOperator.EQUAL, userEmail)).addSort("timestamp", SortDirection.DESCENDING);
+      String userEmail = userService.getCurrentUser().getEmail();
 
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        PreparedQuery results = datastore.prepare(query);
+      Query query =
+          new Query("Image")
+              .setFilter(new FilterPredicate("email", FilterOperator.EQUAL, userEmail))
+              .addSort("timestamp", SortDirection.DESCENDING);
 
-        for (Entity entity: results.asIterable()) {
-            long id = entity.getKey().getId();
-            String name = (String) entity.getProperty("name");
-            String blobKey = (String) entity.getProperty("blobKey");
-            long timestamp = (long) entity.getProperty("timestamp");
-            String email = (String) entity.getProperty("email");
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      PreparedQuery results = datastore.prepare(query);
 
-            Image image = new Image(id, name, blobKey, timestamp, email);
-            images.add(image);
-        }
+      for (Entity entity : results.asIterable()) {
+        long id = entity.getKey().getId();
+        String name = (String) entity.getProperty("name");
+        String blobKey = (String) entity.getProperty("blobKey");
+        long timestamp = (long) entity.getProperty("timestamp");
+        String email = (String) entity.getProperty("email");
 
-        usersImages.put("userImages", images);
-        String json = convertToJsonUsingGson(usersImages);
-        response.setContentType("application/json;");
-        response.getWriter().println(json);
+        Image image = new Image(id, name, blobKey, timestamp, email);
+        images.add(image);
+      }
+
+      usersImages.put("userImages", images);
+      String json = convertToJsonUsingGson(usersImages);
+      response.setContentType("application/json;");
+      response.getWriter().println(json);
     }
   }
-  
-  // users post their own images
+
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     PrintWriter out = response.getWriter();
     UserService userService = UserServiceFactory.getUserService();
 
@@ -93,21 +93,18 @@ public class NewImageDataServlet extends HttpServlet {
 
     String blobKey = getBlobKey(request, "image");
     String email = userService.getCurrentUser().getEmail();
-
     if (blobKey == null) {
-    out.println("Please upload an image file.");
-    return;
+      out.println("Please upload an image file.");
+      return;
     }
 
-    //Store in DataStore
     String user = request.getParameter("user");
     storeImage("Image", user, blobKey, email);
-
     response.sendRedirect("/imageGallery.html");
-  } 
+  }
 
   private void storeImage(String kind, String user, String blobKey, String email) {
-    long timestamp= System.currentTimeMillis();
+    long timestamp = System.currentTimeMillis();
 
     Entity imageEntity = new Entity(kind);
     imageEntity.setProperty("name", user);
@@ -146,6 +143,4 @@ public class NewImageDataServlet extends HttpServlet {
     String json = gson.toJson(messages);
     return json;
   }
-
-
 }

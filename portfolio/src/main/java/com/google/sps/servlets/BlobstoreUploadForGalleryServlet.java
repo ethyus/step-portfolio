@@ -8,10 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 @WebServlet("/blobstore-upload-url-gallery")
 public class BlobstoreUploadForGalleryServlet extends HttpServlet {
-  
+
   // Create an upload URL for the user to upload their images to BlobStore
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

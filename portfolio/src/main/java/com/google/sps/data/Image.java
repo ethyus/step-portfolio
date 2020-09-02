@@ -8,7 +8,6 @@ public final class Image {
   private final String blobKey;
   private final long timestamp;
   private final String email;
-  
 
   public Image(long id, String name, String blobKey, long timestamp, String email) {
     this.id = id;
