@@ -11,7 +11,7 @@ public final class Comment {
   public Comment(long id, String name, String message, long timestamp) {
     this.id = id;
     this.name = name;
-    this.message = name + ":     " + message;
+    this.message = message;
     this.timestamp = timestamp;
   }
 }
