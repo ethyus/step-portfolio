@@ -43,7 +43,7 @@ function fetchUserStatus () {
     .then(userJson => {
       const status = document.getElementById('logStatus')
       const formStatus = document.getElementById('image-form')
-      if (userJson['email'] == 'null') {
+      if (userJson['email'] === 'null') {
         status.setAttribute('href', userJson['loginUrl'])
         status.innerText = 'Login if you want access'
         formStatus.style.display = 'none'
