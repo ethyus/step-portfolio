@@ -35,6 +35,12 @@
       <artifactId>appengine-api-1.0-sdk</artifactId>
       <version>1.9.59</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-vision</artifactId>
+      <version>1.70.0</version>
+    </dependency>
   </dependencies>
 
   
@@ -53,7 +59,8 @@
           <deploy.version>1</deploy.version>
         </configuration>
       </plugin>
-       <plugin>
+
+      <plugin>
       <groupId>com.theoryinpractise</groupId>
       <artifactId>googleformatter-maven-plugin</artifactId>
       <version>1.7.3</version>
