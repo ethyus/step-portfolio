@@ -43,35 +43,30 @@ public final class FindMeetingQuery {
     }
 
     if (!(mandatoryAttendees.isEmpty()) && optionalAttendees.isEmpty()) {
-      return getTimeSlotWithMandatoryAttendeesOnly(
-          mandatoryEvents, request, TimeRange.START_OF_DAY, TimeRange.END_OF_DAY);
+      return getTimeSlotWithMandatoryAttendeesOnly(mandatoryEvents, request, TimeRange.START_OF_DAY,
+          TimeRange.END_OF_DAY);
     } else if ((mandatoryAttendees.isEmpty() && optionalAttendees.isEmpty())) {
       return fullDayAsOpenSlot();
     } else {
-      return getTimeSlotWithMostOptionalAttendees(
-          events, request, mandatoryAttendees, optionalAttendees, mandatoryEvents.size());
+      return getTimeSlotWithMostOptionalAttendees(events, request, mandatoryAttendees, optionalAttendees,
+          mandatoryEvents.size());
     }
   }
 
-  public Collection<TimeRange> getTimeSlotWithMostOptionalAttendees(
-      Collection<Event> events,
-      MeetingRequest request,
-      Set<String> mandatoryAttendees,
-      Set<String> optionalAttendees,
-      int numOfMandatoryEvents) {
+  public Collection<TimeRange> getTimeSlotWithMostOptionalAttendees(Collection<Event> events, MeetingRequest request,
+      Set<String> mandatoryAttendees, Set<String> optionalAttendees, int numOfMandatoryEvents) {
 
     // Generate all possible intervals in O(1) time
     int totalMinutes = 60 * 24;
     int meetingDuration = (int) request.getDuration();
     ArrayList<TimeRange> possibleIntervals = new ArrayList<>();
     for (int currentMinute = 0; currentMinute < totalMinutes - meetingDuration; currentMinute++) {
-      possibleIntervals.add(
-          TimeRange.fromStartEnd(currentMinute, currentMinute + meetingDuration, false));
+      possibleIntervals.add(TimeRange.fromStartEnd(currentMinute, currentMinute + meetingDuration, false));
     }
 
     // Maintain a list of intervals of meet the events' conditions
-    ArrayList<TimeRange> sufficientIntervals =
-        getSufficientIntervals(events, possibleIntervals, mandatoryAttendees, optionalAttendees);
+    ArrayList<TimeRange> sufficientIntervals = getSufficientIntervals(events, possibleIntervals, mandatoryAttendees,
+        optionalAttendees);
 
     // Merge overlapping intervals
     Map<TimeRange, Integer> frequency = merge(sufficientIntervals, numOfMandatoryEvents);
@@ -80,11 +75,8 @@ public final class FindMeetingQuery {
     return getKeysWithMaximumValue(frequency);
   }
 
-  public ArrayList<TimeRange> getSufficientIntervals(
-      Collection<Event> events,
-      ArrayList<TimeRange> possibleIntervals,
-      Set<String> mandatoryAttendees,
-      Set<String> optionalAttendees) {
+  public ArrayList<TimeRange> getSufficientIntervals(Collection<Event> events, ArrayList<TimeRange> possibleIntervals,
+      Set<String> mandatoryAttendees, Set<String> optionalAttendees) {
     // Maintain a list of intervals of meet the events' conditions
     ArrayList<TimeRange> sufficientIntervals = new ArrayList<>();
 
@@ -135,8 +127,8 @@ public final class FindMeetingQuery {
       }
 
       // Merging Step : In order for overlapping intervals to be extended, previous
-      // and current
-      // intervals can fit all mandatory attendees and have the same number of
+      // and current intervals can fit all mandatory attendees and have the same
+      // number of
       // optional attendee
       if (curInterval.mandatoryAttendee == numOfMandatoryEvents
           && curInterval.optionalAttendee == prevOptionalAttendee) {
@@ -175,8 +167,8 @@ public final class FindMeetingQuery {
     return frequency;
   }
 
-  public Collection<TimeRange> getTimeSlotWithMandatoryAttendeesOnly(
-      ArrayList<TimeRange> times, MeetingRequest request, int startTime, int endTime) {
+  public Collection<TimeRange> getTimeSlotWithMandatoryAttendeesOnly(ArrayList<TimeRange> times, MeetingRequest request,
+      int startTime, int endTime) {
 
     ArrayList<TimeRange> openTime = new ArrayList<>();
 
