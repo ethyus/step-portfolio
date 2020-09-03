@@ -17,8 +17,9 @@ package com.google.sps;
 import java.util.Comparator;
 
 /**
- * Class representing a span of time, enforcing properties (e.g. start comes before end) and
- * providing methods to make ranges easier to work with (e.g. {@code overlaps}).
+ * Class representing a span of time, enforcing properties (e.g. start comes
+ * before end) and providing methods to make ranges easier to work with (e.g.
+ * {@code overlaps}).
  */
 public final class TimeRange {
   public static final int START_OF_DAY = getTimeInMinutes(0, 0);
@@ -26,9 +27,7 @@ public final class TimeRange {
 
   public static final TimeRange WHOLE_DAY = new TimeRange(0, 24 * 60);
 
-  /**
-   * A comparator for sorting ranges by their start time in ascending order.
-   */
+  /** A comparator for sorting ranges by their start time in ascending order. */
   public static final Comparator<TimeRange> ORDER_BY_START = new Comparator<TimeRange>() {
     @Override
     public int compare(TimeRange a, TimeRange b) {
@@ -36,9 +35,7 @@ public final class TimeRange {
     }
   };
 
-  /**
-   * A comparator for sorting ranges by their end time in ascending order.
-   */
+  /** A comparator for sorting ranges by their end time in ascending order. */
   public static final Comparator<TimeRange> ORDER_BY_END = new Comparator<TimeRange>() {
     @Override
     public int compare(TimeRange a, TimeRange b) {
@@ -48,36 +45,51 @@ public final class TimeRange {
 
   private final int start;
   private final int duration;
+  public int mandatoryAttendee;
+  public int optionalAttendee;
 
   private TimeRange(int start, int duration) {
     this.start = start;
     this.duration = duration;
   }
 
-  /**
-   * Returns the start of the range in minutes.
-   */
+  public void setMandatoryAttendee(int mandatoryAttendee) {
+    this.mandatoryAttendee = mandatoryAttendee;
+  }
+
+  public void setOptionalAttendee(int optionalAttendee) {
+    this.optionalAttendee = optionalAttendee;
+  }
+
+  public int getMandatoryAttendee() {
+    return this.mandatoryAttendee;
+  }
+
+  public int getOptionalAttendee() {
+    return this.optionalAttendee;
+  }
+
+  /** Returns the start of the range in minutes. */
   public int start() {
     return start;
   }
 
-  /**
-   * Returns the number of minutes between the start and end.
-   */
+  /** Returns the number of minutes between the start and end. */
   public int duration() {
     return duration;
   }
 
   /**
-   * Returns the end of the range. This ending value is the closing exclusive bound.
+   * Returns the end of the range. This ending value is the closing exclusive
+   * bound.
    */
   public int end() {
     return start + duration;
   }
 
   /**
-   * Checks if two ranges overlap. This means that at least some part of one range falls within the
-   * bounds of another range.
+   * Checks if two ranges overlap. This means that at least some part of one range
+   * falls within the bounds of another range.
    */
   public boolean overlaps(TimeRange other) {
     // For two ranges to overlap, one range must contain the start of another range.
@@ -85,17 +97,17 @@ public final class TimeRange {
     // Case 1: |---| |---|
     //
     // Case 2: |---|
-    //            |---|
+    // |---|
     //
     // Case 3: |---------|
-    //            |---|
+    // |---|
     return this.contains(other.start) || other.contains(this.start);
   }
 
   /**
-   * Checks if this range completely contains another range. This means that {@code other} is a
-   * subset of this range. This is an inclusive bounds, meaning that if two ranges are the same,
-   * they contain each other.
+   * Checks if this range completely contains another range. This means that
+   * {@code other} is a subset of this range. This is an inclusive bounds, meaning
+   * that if two ranges are the same, they contain each other.
    */
   public boolean contains(TimeRange other) {
     // If this range has no duration, it cannot contain anything.
@@ -103,15 +115,16 @@ public final class TimeRange {
       return false;
     }
 
-    // If the other range has no duration, then we must treat it like a point in time rather than a
-    // range.
+    // If the other range has no duration, then we must treat it like a point in
+    // time rather than a range.
     if (other.duration <= 0) {
       return contains(this, other.start);
     }
 
-    // We need the inclusive end for this check in order for this case to equal true:
+    // We need the inclusive end for this check in order for this case to equal
+    // true:
     // |------|
-    //     |--|
+    // |--|
     int otherInclusiveEnd = other.start + other.duration - 1;
     return contains(this, other.start) && contains(this, otherInclusiveEnd);
   }
@@ -141,14 +154,18 @@ public final class TimeRange {
       return false;
     }
 
-    // If the point comes before the start of the range, the range cannot contain it.
+    // If the point comes before the start of the range, the range cannot contain
+    // it.
     if (point < range.start) {
       return false;
     }
 
-    // If the point is on the end of the range. We don't count it as included in the range. For
-    // example, if we have a range that starts at 8:00 and is 30 minutes long, it would end at 8:30.
-    // But that range should on contain 8:30 because it would end just before 8:30 began.
+    // If the point is on the end of the range. We don't count it as included in the
+    // range. For example, if we have a range that starts at 8:00 and is 30 minutes
+    // long, it
+    // would end at 8:30. But that range should on contain 8:30 because it would end
+    // just before 8:30
+    // began.
     return point < range.start + range.duration;
   }
 
@@ -169,16 +186,17 @@ public final class TimeRange {
   }
 
   /**
-   * Creates a {@code TimeRange} from {@code start} to {@code end}. Whether or not {@code end} is
-   * included in the range will depend on {@code inclusive}. If {@code inclusive} is {@code true},
-   * then @{code end} will be in the range.
+   * Creates a {@code TimeRange} from {@code start} to {@code end}. Whether or not
+   * {@code end} is included in the range will depend on {@code inclusive}. If
+   * {@code inclusive} is {@code true}, then @{code end} will be in the range.
    */
   public static TimeRange fromStartEnd(int start, int end, boolean inclusive) {
     return inclusive ? new TimeRange(start, end - start + 1) : new TimeRange(start, end - start);
   }
 
   /**
-   * Create a {@code TimeRange} starting at {@code start} with a duration equal to {@code duration}.
+   * Create a {@code TimeRange} starting at {@code start} with a duration equal to
+   * {@code duration}.
    */
   public static TimeRange fromStartDuration(int start, int duration) {
     return new TimeRange(start, duration);
