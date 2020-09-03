@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@200;400&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;400&display=swap');
 * {
   box-sizing: border-box;
 }
@@ -7,7 +7,7 @@ body {
   margin: 0px;
   font-size: 16px;
   height: 100vh;
-  font-family: "Raleway", "san-serif";
+  font-family: 'Raleway', 'san-serif';
 }
 .global-container {
   display: grid;
@@ -25,8 +25,7 @@ body {
   box-sizing: border-box;
   height: 10vh;
 }
-
-li,
+nav ul li,
 a {
   font-size: 1rem;
   color: #edf0f1;
@@ -125,6 +124,32 @@ h2 {
   padding: 50px;
   height: 100%;
 }
+
+.userImage {
+  height: 100%;
+  width: 100%;
+}
+.img-wrap {
+  height: 300px;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.9;
+  position: relative;
+}
+
+.img-wrap .close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 100;
+  opacity: 0.1;
+}
+
+.img-wrap:hover .close {
+  opacity: 1;
+}
+
 .image-wrapper {
   height: 300px;
   width: 100%;
@@ -144,6 +169,7 @@ h2 {
 .info {
   position: absolute;
   padding: 100px;
+  width: 100%;
 }
 
 .sub-header {
@@ -178,13 +204,66 @@ h2 {
 
 .resume-list li i {
   padding: 0 2px;
-  font-size: 24px
+  font-size: 24px;
 }
-
+/* Comment Page */
 
 .section-4 {
-  height: 500px;
+  height: 700px;
   background-color: #b7c2c2;
+}
+.comment-content {
+  padding: 20px 0 0 0;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+#message {
+  width: 400px;
+  height: 200px;
+}
+
+.message-error {
+  color: red;
+}
+.comment-header {
+  padding: 0 0 10 0;
+}
+
+.section-5 {
+  height: 600px;
+}
+
+.form-content {
+  padding: 20px 0 0 0;
+}
+
+.infoWrapper {
+  padding: 100px;
+}
+
+.userStatus-container {
+  height: 200px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.main123 {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  width: 100%;
+  padding: 0 50px;
+}
+
+#logStatus {
+  color: black;
+}
+
+#logStatus:hover {
+  color: #0088a9;
 }
 
 @media (min-width: 1200px) {
@@ -193,6 +272,11 @@ h2 {
   }
   li a i {
     font-size: 3.5rem;
+  }
+  .comment-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(1, 1fr);
   }
 }
 
@@ -222,11 +306,12 @@ h2 {
   h2 {
     font-size: 1.8rem;
   }
-  .section-2, .section-3{
-      height: 650px;
+  .section-2,
+  .section-3 {
+    height: 650px;
   }
-  .info{
-      padding:50px;
+  .info {
+    padding: 50px;
   }
 }
 
@@ -250,15 +335,19 @@ h2 {
   li a i {
     font-size: 2rem;
   }
-  .span-me{
-      padding:5px 10px;
-      font-size:12px;
+  .span-me {
+    padding: 5px 10px;
+    font-size: 12px;
   }
-  .resume-list li{
-      font-size:18px
+  .resume-list li {
+    font-size: 18px;
   }
-  .info{
-      padding: 30px;
+  .info {
+    padding: 30px;
+  }
+
+  .right-side ul li {
+    color: black;
   }
 }
 
@@ -278,12 +367,12 @@ h2 {
   h2 {
     font-size: 1.5rem;
   }
-    .span-me{
-      padding:5px 10px;
-      font-size:8px;
+  .span-me {
+    padding: 5px 10px;
+    font-size: 8px;
   }
-    .resume-list li{
-      font-size:16px
+  .resume-list li {
+    font-size: 16px;
   }
 }
 
@@ -291,7 +380,7 @@ h2 {
   width: 100%;
   height: 100%;
   background-color: white;
-  background-image: url("");
+  background-image: url('');
   background-repeat: no-repeat;
   background-size: cover;
   position: fixed;

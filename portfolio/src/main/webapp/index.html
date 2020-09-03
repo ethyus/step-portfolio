@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="start()">
     <div class="global-container" id="home">
       <div class="nav-container">
         <nav>
@@ -23,7 +23,7 @@
               </a>
             </li>
             <li>
-              <a href="#Contact-page">
+              <a href="mailto:suyhte@gmail.com">
                 <i class="far fa-envelope"></i>
               </a>
             </li>
@@ -35,6 +35,7 @@
             <li><a href="#home"> Home </a></li>
             <li><a href="#about"> About Me </a></li>
             <li><a href="#resume"> Resume </a></li>
+            <li><a href="/imageGallery.html"> Gallery </a></li>
           </ul>
         </nav>
       </div>
@@ -101,9 +102,11 @@
           <div class="aboutMe-content">
             <h2>
               Hey, I'm Thomas Ngo, a rising sophomore at Massachusetts Institute
-              of Technology, pursuing a joint-major in computer science and neuroscience. I am currently interested in machine learning and
-              its applications; I hope to tackle on some ML projects in the future. Outside of academia, I enjoy excercising and
-              making espresso and matcha drinks. 
+              of Technology, pursuing a joint-major in computer science and
+              neuroscience. I am currently interested in machine learning and
+              its applications; I hope to tackle on some ML projects in the
+              future. Outside of academia, I enjoy excercising and making
+              espresso and matcha drinks.
             </h2>
           </div>
         </div>
@@ -153,10 +156,37 @@
           </div>
         </div>
       </div>
-      <div class="section-4" id="Contact-page">
+      <div class="section-4" id="comment-page">
         <div class="info">
           <div class="sub-header">
-            <span class="span-me">Contact Me</span>
+            <span class="span-me">Comment Page</span>
+          </div>
+          <div class="comment-content">
+            <div class="left-side">
+              <form action="/data" method="POST">
+                <label for="name"> Name: </label
+                ><span id="name_error" style="color: red;" ;></span><br />
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Your name"
+                /><br />
+                <label for="message"> Message: </label
+                ><span id="message_error" style="color: red;" ;></span><br />
+                <textarea
+                  type="text"
+                  id="message"
+                  name="message-content"
+                  placeholder="Your messsage"
+                ></textarea>
+                <input type="submit" />
+              </form>
+            </div>
+            <div class="right-side">
+              <div class="comment-header">Comment History</div>
+              <div class="comment-history" id="server"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -170,10 +200,11 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-      particlesJS.load("particles-js", "particles.json", function () {
-        console.log("particles.json loaded");
-      });
+      particlesJS.load('particles-js', 'particles.json', function () {
+        console.log('particles.json loaded')
+      })
     </script>
     <script src="typing.js"></script>
+    <script src="image_analyzer.js"></script>
   </body>
 </html>
