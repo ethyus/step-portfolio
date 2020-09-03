@@ -72,6 +72,7 @@ public class DataServlet extends HttpServlet {
     commentInfo.get("messageInfo").put("history", comments);
 
     String json = convertToJsonUsingGson(commentInfo);
+    
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }

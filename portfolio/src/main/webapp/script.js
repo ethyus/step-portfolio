@@ -120,7 +120,7 @@ function getComment () {
   const info = fetch('/data')
     .then(info => info.json())
     .then(info => {
-      if (!('messageInfo' in info)) {
+      if (info['messageInfo'] != null) {
         comments.append(createHeaderElement('No Messages Available'))
       } else if (info['messageInfo']['history'].length == 0) {
         comments.append(createHeaderElement('No Messages Available'))
