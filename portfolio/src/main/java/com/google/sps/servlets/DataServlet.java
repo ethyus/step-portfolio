@@ -81,8 +81,8 @@ public class DataServlet extends HttpServlet {
     commentInfo = checkValidity(request);
 
     // Send invalid input to client for correction
-    if (((Boolean) commentInfo.get("nameInfo").get("error") == true)
-        || ((Boolean) commentInfo.get("messageInfo").get("error") == true)) {
+    if (((Boolean) commentInfo.get("nameInfo").get("error"))
+        || ((Boolean) commentInfo.get("messageInfo").get("error"))) {
     } else {
       // Store valid input in datastore
       String message = (String) commentInfo.get("messageInfo").get("message");
