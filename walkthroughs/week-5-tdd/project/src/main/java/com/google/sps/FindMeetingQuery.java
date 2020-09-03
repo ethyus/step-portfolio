@@ -69,11 +69,25 @@ public final class FindMeetingQuery {
           TimeRange.fromStartEnd(currentMinute, currentMinute + meetingDuration, false));
     }
 
-    // Maintain a frequency of timeSlot that already works for all mandatory
-    // attendee to the # of optional attendees
-    Map<TimeRange, Integer> frequency = new HashMap<>();
+    // Maintain a list of intervals of meet the events' conditions
+    ArrayList<TimeRange> sufficientIntervals =
+        getSufficientIntervals(events, possibleIntervals, mandatoryAttendees, optionalAttendees);
 
-    ArrayList<TimeRange> intervals = new ArrayList<>();
+    // Merge overlapping intervals
+    Map<TimeRange, Integer> frequency = merge(sufficientIntervals, numOfMandatoryEvents);
+
+    // Returns a collection of times with the maximum number of optional attendees
+    return getKeysWithMaximumValue(frequency);
+  }
+
+  public ArrayList<TimeRange> getSufficientIntervals(
+      Collection<Event> events,
+      ArrayList<TimeRange> possibleIntervals,
+      Set<String> mandatoryAttendees,
+      Set<String> optionalAttendees) {
+    // Maintain a list of intervals of meet the events' conditions
+    ArrayList<TimeRange> sufficientIntervals = new ArrayList<>();
+
     // Check all possible intervals and return the optimal one with the most
     // optional attendees
     for (int j = 0; j < possibleIntervals.size(); j++) {
@@ -94,8 +108,16 @@ public final class FindMeetingQuery {
         }
       }
 
-      intervals.add(curInterval);
+      sufficientIntervals.add(curInterval);
     }
+
+    return sufficientIntervals;
+  }
+
+  public Map<TimeRange, Integer> merge(ArrayList<TimeRange> intervals, int numOfMandatoryEvents) {
+    // Maintain a frequency of timeSlot that already works for all mandatory
+    // attendee to the # of optional attendees
+    Map<TimeRange, Integer> frequency = new HashMap<>();
 
     int startTime = 0;
     int optimalEndTime = 0;
@@ -142,7 +164,7 @@ public final class FindMeetingQuery {
       prevMandatoryAttendee = curInterval.mandatoryAttendee;
       prevOptionalAttendee = curInterval.optionalAttendee;
 
-      if (j == possibleIntervals.size() - 1) {
+      if (j == intervals.size() - 1) {
         // Checks if this last interval can be extended from the previous one
         if (prevMandatoryAttendee == numOfMandatoryEvents) {
           TimeRange slot = TimeRange.fromStartEnd(startTime, optimalEndTime, true);
@@ -150,9 +172,7 @@ public final class FindMeetingQuery {
         }
       }
     }
-
-    // Returns a collection of times with the maximum number of optional attendees
-    return getKeysWithMaximumValue(frequency);
+    return frequency;
   }
 
   public Collection<TimeRange> getTimeSlotWithMandatoryAttendeesOnly(
