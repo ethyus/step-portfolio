@@ -69,50 +69,55 @@ public final class FindMeetingQuery {
           TimeRange.fromStartEnd(currentMinute, currentMinute + meetingDuration, false));
     }
 
-    // Maintain a frequency of timeSlot that already works for all mandatory attendee
-    // to the # of optional attendees
+    // Maintain a frequency of timeSlot that already works for all mandatory
+    // attendee to the # of optional attendees
     Map<TimeRange, Integer> frequency = new HashMap<>();
+
+    ArrayList<TimeRange> intervals = new ArrayList<>();
+    // Check all possible intervals and return the optimal one with the most
+    // optional attendees
+    for (int j = 0; j < possibleIntervals.size(); j++) {
+      TimeRange curInterval = possibleIntervals.get(j);
+      curInterval.mandatoryAttendee = 0;
+      curInterval.optionalAttendee = 0;
+      for (Event i : events) {
+        // Event j and Event i don't overlap
+        if (!curInterval.overlaps(i.getWhen())) {
+          if (optionalAttendees.containsAll(i.getAttendees())) {
+            curInterval.optionalAttendee = curInterval.optionalAttendee + 1;
+          } else if (mandatoryAttendees.containsAll(i.getAttendees())) {
+            curInterval.mandatoryAttendee = curInterval.mandatoryAttendee + 1;
+          }
+        } else if (mandatoryAttendees.containsAll(i.getAttendees())) {
+          // Event j and Event i overlap
+          break;
+        }
+      }
+
+      intervals.add(curInterval);
+    }
 
     int startTime = 0;
     int optimalEndTime = 0;
     int prevOptionalAttendee = 0;
     int prevMandatoryAttendee = 0;
-
-    // Check all possible intervals and return the optimal one with the most optional attendees
-    for (int j = 0; j < possibleIntervals.size(); j++) {
-      TimeRange curInterval = possibleIntervals.get(j);
-      int curMandatoryAttendee = 0;
-      int curOptionalAttendee = 0;
-      second:
-      for (Event i : events) {
-        // events do not overlap
-        if (!curInterval.overlaps(i.getWhen())) {
-          if (optionalAttendees.containsAll(i.getAttendees())) {
-            curOptionalAttendee++;
-          } else if (mandatoryAttendees.containsAll(i.getAttendees())) {
-            curMandatoryAttendee++;
-          }
-        } else {
-          // events overlap
-          if (mandatoryAttendees.containsAll(i.getAttendees())) {
-            break second;
-          }
-        }
-      }
-
+    for (int j = 0; j < intervals.size(); j++) {
+      TimeRange curInterval = intervals.get(j);
       // Initializes variables for first event
       if (j == 0) {
         startTime = curInterval.start();
         optimalEndTime = curInterval.end();
-        prevOptionalAttendee = curOptionalAttendee;
-        prevMandatoryAttendee = curMandatoryAttendee;
+        prevOptionalAttendee = curInterval.optionalAttendee;
+        prevMandatoryAttendee = curInterval.mandatoryAttendee;
         continue;
       }
 
-      // In order for overlapping intervals to be extended, previous and current intervals
-      // can fit all mandatory attendees and have the same number of optional attendee
-      if (curMandatoryAttendee == numOfMandatoryEvents
-          && curOptionalAttendee == prevOptionalAttendee) {
+      // Merging Step : In order for overlapping intervals to be extended, previous
+      // and current
+      // intervals can fit all mandatory attendees and have the same number of
+      // optional attendee
+      if (curInterval.mandatoryAttendee == numOfMandatoryEvents
+          && curInterval.optionalAttendee == prevOptionalAttendee) {
 
         // Checks if this interval can be extended from the previous one
         if (prevMandatoryAttendee == numOfMandatoryEvents) {
@@ -134,8 +139,8 @@ public final class FindMeetingQuery {
         optimalEndTime = curInterval.end();
       }
 
-      prevMandatoryAttendee = curMandatoryAttendee;
-      prevOptionalAttendee = curOptionalAttendee;
+      prevMandatoryAttendee = curInterval.mandatoryAttendee;
+      prevOptionalAttendee = curInterval.optionalAttendee;
 
       if (j == possibleIntervals.size() - 1) {
         // Checks if this last interval can be extended from the previous one

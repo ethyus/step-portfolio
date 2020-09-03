@@ -46,10 +46,28 @@ public final class TimeRange {
 
   private final int start;
   private final int duration;
+  public int mandatoryAttendee;
+  public int optionalAttendee;
 
   private TimeRange(int start, int duration) {
     this.start = start;
     this.duration = duration;
+  }
+
+  public void setMandatoryAttendee(int mandatoryAttendee) {
+    this.mandatoryAttendee = mandatoryAttendee;
+  }
+
+  public void setOptionalAttendee(int optionalAttendee) {
+    this.optionalAttendee = optionalAttendee;
+  }
+
+  public int getMandatoryAttendee() {
+    return this.mandatoryAttendee;
+  }
+
+  public int getOptionalAttendee() {
+    return this.optionalAttendee;
   }
 
   /** Returns the start of the range in minutes. */
@@ -77,10 +95,10 @@ public final class TimeRange {
     // Case 1: |---| |---|
     //
     // Case 2: |---|
-    //            |---|
+    // |---|
     //
     // Case 3: |---------|
-    //            |---|
+    // |---|
     return this.contains(other.start) || other.contains(this.start);
   }
 
@@ -95,15 +113,17 @@ public final class TimeRange {
       return false;
     }
 
-    // If the other range has no duration, then we must treat it like a point in time rather than a
+    // If the other range has no duration, then we must treat it like a point in
+    // time rather than a
     // range.
     if (other.duration <= 0) {
       return contains(this, other.start);
     }
 
-    // We need the inclusive end for this check in order for this case to equal true:
+    // We need the inclusive end for this check in order for this case to equal
+    // true:
     // |------|
-    //     |--|
+    // |--|
     int otherInclusiveEnd = other.start + other.duration - 1;
     return contains(this, other.start) && contains(this, otherInclusiveEnd);
   }
@@ -133,14 +153,18 @@ public final class TimeRange {
       return false;
     }
 
-    // If the point comes before the start of the range, the range cannot contain it.
+    // If the point comes before the start of the range, the range cannot contain
+    // it.
     if (point < range.start) {
       return false;
     }
 
-    // If the point is on the end of the range. We don't count it as included in the range. For
-    // example, if we have a range that starts at 8:00 and is 30 minutes long, it would end at 8:30.
-    // But that range should on contain 8:30 because it would end just before 8:30 began.
+    // If the point is on the end of the range. We don't count it as included in the
+    // range. For
+    // example, if we have a range that starts at 8:00 and is 30 minutes long, it
+    // would end at 8:30.
+    // But that range should on contain 8:30 because it would end just before 8:30
+    // began.
     return point < range.start + range.duration;
   }
 
