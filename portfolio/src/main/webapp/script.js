@@ -12,36 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-function getComment() {
-
-  const comments = document.getElementById("server");
+function getComment () {
+  const comments = document.getElementById('server')
 
   // Get nested Json Objects
-  const info = fetch("/data")
-    .then((info) => info.json())
-    .then((info) => {
-      if (!("messageInfo" in info)) {
-        comments.append(createHeaderElement("No Messages Available"));
-      } else if (info["messageInfo"]["history"].length == 0){
-        comments.append(createHeaderElement("No Messages Available"));
+  const info = fetch('/data')
+    .then(info => info.json())
+    .then(info => {
+      if (info['messageInfo'] != null) {
+        comments.append(createHeaderElement('No Messages Available'))
+      } else if (info['messageInfo']['history'].length == 0) {
+        comments.append(createHeaderElement('No Messages Available'))
       } else {
-        info["messageInfo"]["history"].forEach((message) => {
-          comments.appendChild(createListElement(message));
-        });
+        info['messageInfo']['history'].forEach(message => {
+          comments.appendChild(createListElement(message))
+        })
       }
     })
     .catch(() => {
-      let error = "Cannot Display Message";
-      comments.append(createHeaderElement(error));
-    });
+      let error = 'Cannot Display Message'
+      comments.append(createHeaderElement(error))
+    })
 }
-function createListElement(text) {
-  const liElement = document.createElement("li");
-  liElement.innerText = text;
-  return liElement;
+function createListElement (text) {
+  const liElement = document.createElement('li')
+  liElement.innerText = text
+  return liElement
 }
-function createHeaderElement(text) {
-  const h2Element = document.createElement("h2");
-  h2Element.innerText = text;
-  return h2Element;
+function createHeaderElement (text) {
+  const h2Element = document.createElement('h2')
+  h2Element.innerText = text
+  return h2Element
 }
