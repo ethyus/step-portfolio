@@ -7,69 +7,68 @@
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
   </head>
-  <body onload = "startImageGallery()">
-      <div class = "global-container">
-        <div class="nav-container">
-            <nav>
-            <ul class="logo-links">
-                <li>
-                <a href="https://www.linkedin.com/in/thomas-ngo-b983bb149/">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
-                </li>
-                <li>
-                <a href="https://github.com/ethyus">
-                    <i class="fab fa-github"></i>
-                </a>
-                </li>
-                <li>
-                <a href="mailto:suyhte@gmail.com">
-                    <i class="far fa-envelope"></i>
-                </a>
-                </li>
-            </ul>
-            </nav>
+  <body onload="startImageGallery()">
+    <div class="global-container">
+      <div class="nav-container">
+        <nav>
+          <ul class="logo-links">
+            <li>
+              <a href="https://www.linkedin.com/in/thomas-ngo-b983bb149/">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/ethyus">
+                <i class="fab fa-github"></i>
+              </a>
+            </li>
+            <li>
+              <a href="mailto:suyhte@gmail.com">
+                <i class="far fa-envelope"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
 
-            <nav>
-            <ul class="web-links">
-                <li><a href="/index.html#home"> Home </a></li>
-                <li><a href="/index.html#about"> About Me </a></li>
-                <li><a href="/index.html#resume"> Resume </a></li>
-                <li><a href="/imageGallery.html"> Gallery </a></li>
-            </ul>
-            </nav>
-        </div>
-        <div class = "infoWrapper">
-        <div class = "userStatus-container">
-            <div class = "sub-header">
+        <nav>
+          <ul class="web-links">
+            <li><a href="/index.html#home"> Home </a></li>
+            <li><a href="/index.html#about"> About Me </a></li>
+            <li><a href="/index.html#resume"> Resume </a></li>
+            <li><a href="/imageGallery.html"> Gallery </a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="infoWrapper">
+        <div class="userStatus-container">
+          <div class="sub-header">
             <span class="span-me">Your Image Gallery</span>
           </div>
-          <div class = "main123">
-            <div class = "auth-section">
-                <a href = "#" id = "logStatus"></a>
+          <div class="main123">
+            <div class="auth-section">
+              <a href="#" id="logStatus"></a>
             </div>
-            <div class = "form-content" id = "image-form">
-                <form
+            <div class="form-content" id="image-form">
+              <form
                 id="my-form-gallery"
                 class="hidden"
                 method="POST"
                 enctype="multipart/form-data"
-                >
+              >
                 <p>Upload an image:</p>
                 <input type="file" name="image" />
                 <br /><br />
                 <button>Submit</button>
-                </form>
+              </form>
             </div>
-            </div>
+          </div>
         </div>
-        </div>
-        <div class = "image-container" id = "current-images"></div>
+      </div>
+      <div class="image-container" id="current-images"></div>
     </div>
     <script
       src="https://kit.fontawesome.com/089ef5eb85.js"
       crossorigin="anonymous"
     ></script>
-
   </body>
 </html>
