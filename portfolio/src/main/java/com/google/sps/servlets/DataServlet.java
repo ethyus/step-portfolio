@@ -122,16 +122,8 @@ public class DataServlet extends HttpServlet {
 
     name.put("name", nameStr);
     message.put("message", messageStr);
-    if (!validateName(nameStr, pattern)) {
-      name.put("error", true);
-    } else {
-      name.put("error", false);
-    }
-    if (validateMessage(messageStr)) {
-      message.put("error", true);
-    } else {
-      message.put("error", false);
-    }
+    name.put("error", !validateName(nameStr, pattern));
+    message.put("error", validateMessage(messageStr));
 
     info.put("nameInfo", name);
     info.put("messageInfo", message);
