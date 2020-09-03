@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
   </head>
-  <body onload="getComment()">
+  <body onload="start()">
     <div class="global-container" id="home">
       <div class="nav-container">
         <nav>
@@ -23,7 +23,7 @@
               </a>
             </li>
             <li>
-              <a href="#Contact-page">
+              <a href="mailto:suyhte@gmail.com">
                 <i class="far fa-envelope"></i>
               </a>
             </li>
@@ -35,6 +35,7 @@
             <li><a href="#home"> Home </a></li>
             <li><a href="#about"> About Me </a></li>
             <li><a href="#resume"> Resume </a></li>
+            <li><a href="/imageGallery.html"> Gallery </a></li>
           </ul>
         </nav>
       </div>
@@ -163,20 +164,27 @@
           <div class="comment-content">
             <div class="left-side">
               <form action="/data" method="POST">
-                <label for="fname"> First Name: </label><br />
-                <input type="text" id="fname" name="fname" /><br />
-                <label for="lname"> Last Name: </label><br />
-                <input type="text" id="lname" name="lname" /><br />
+                <label for="name"> Name: </label
+                ><span id="name_error" style="color: red;" ;></span><br />
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Your name"
+                /><br />
+                <label for="message"> Message: </label
+                ><span id="message_error" style="color: red;" ;></span><br />
                 <textarea
                   type="text"
                   id="message"
                   name="message-content"
-                  placeholder="Message:"
+                  placeholder="Your messsage"
                 ></textarea>
                 <input type="submit" />
               </form>
             </div>
             <div class="right-side">
+              <div class="comment-header">Comment History</div>
               <div class="comment-history" id="server"></div>
             </div>
           </div>
@@ -197,5 +205,6 @@
       })
     </script>
     <script src="typing.js"></script>
+    <script src="image_analyzer.js"></script>
   </body>
 </html>
