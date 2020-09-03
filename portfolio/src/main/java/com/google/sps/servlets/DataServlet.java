@@ -37,16 +37,17 @@ import java.util.Map;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
+  private HashMap<String, HashMap<String, Object>> commentInfo;
+
   // Used in validateName() function
   private static final String regex = "^[a-zA-Z ]+$";
   private static final Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-  private HashMap<String, HashMap<String, Object>> information;
 
   @Override
   public void init() {
-    information = new HashMap<String, HashMap<String, Object>>();
-    information.put("messageInfo", new HashMap<String, Object>());
-    information.put("nameInfo", new HashMap<String, Object>());
+    commentInfo = new HashMap<String, HashMap<String, Object>>();
+    commentInfo.put("messageInfo", new HashMap<String, Object>());
+    commentInfo.put("nameInfo", new HashMap<String, Object>());
   }
 
   @Override
@@ -68,24 +69,24 @@ public class DataServlet extends HttpServlet {
       comments.add(comment);
     }
 
-    information.get("messageInfo").put("history", comments);
+    commentInfo.get("messageInfo").put("history", comments);
 
-    String json = convertToJsonUsingGson(information);
+    String json = convertToJsonUsingGson(commentInfo);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    information = checkValidity(request);
+    commentInfo = checkValidity(request);
 
     // Send invalid input to client for correction
-    if (((Boolean) information.get("nameInfo").get("error") == true)
-        || ((Boolean) information.get("messageInfo").get("error") == true)) {
-
+    if (((Boolean) commentInfo.get("nameInfo").get("error"))
+        || ((Boolean) commentInfo.get("messageInfo").get("error"))) {
     } else {
-      String message = (String) information.get("messageInfo").get("message");
-      String name = (String) information.get("nameInfo").get("name");
+      // Store valid input in datastore
+      String message = (String) commentInfo.get("messageInfo").get("message");
+      String name = (String) commentInfo.get("nameInfo").get("name");
 
       storeComment("Comment", name, message);
     }
@@ -112,7 +113,6 @@ public class DataServlet extends HttpServlet {
   }
 
   private HashMap<String, HashMap<String, Object>> checkValidity(HttpServletRequest request) {
-
     HashMap<String, HashMap<String, Object>> info = new HashMap<>();
     HashMap<String, Object> message = new HashMap<>();
     HashMap<String, Object> name = new HashMap<>();
